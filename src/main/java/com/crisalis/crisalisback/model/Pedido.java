@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 
@@ -26,9 +27,10 @@ public class Pedido {
 
     private Date fechaCreacion;
 
+     
     @OneToMany(mappedBy = "pedido")
-    private List<ProductoFisico> listaDeProductos = new ArrayList<ProductoFisico>();
-    
-    @OneToMany(mappedBy = "pedido")
-    private List<Servicio> listaDeServicios = new ArrayList<Servicio>();
+    private List<ItemPedido> listaDeItems = new ArrayList<ItemPedido>();
+
+    @ManyToOne
+    private Persona persona;
 }

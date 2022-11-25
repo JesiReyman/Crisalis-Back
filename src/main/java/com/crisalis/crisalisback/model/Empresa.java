@@ -18,12 +18,14 @@ public class Empresa {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    private String razonSocial;
-    private Date fechaInicio;
-    private long cuit;
-
     @OneToOne
     @MapsId
     @JoinColumn(name = "persona_id")
     private Persona persona;
+
+    private String razonSocial;
+    private Date fechaInicio;
+    private long cuit;
+
+    
 }

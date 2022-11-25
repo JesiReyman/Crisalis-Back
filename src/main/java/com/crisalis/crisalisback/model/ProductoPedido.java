@@ -12,9 +12,15 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@DiscriminatorValue("servicio")
-public class Servicio extends Producto{
-    private double precioSoporte;
+@DiscriminatorValue("producto")
+public class ProductoPedido extends ItemPedido{
+
+    private int aniosDeGarantia;
 
     
 }
+
+
+
+
+
