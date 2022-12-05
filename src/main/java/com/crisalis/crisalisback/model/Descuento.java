@@ -1,39 +1,35 @@
 package com.crisalis.crisalisback.model;
 
-import java.sql.Date;
-
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter @Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@DiscriminatorValue("empresa")
 @Entity
-public class Empresa extends Persona{
+public class Descuento {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    /*@OneToOne
+    private double descuentoGenerado;
+
+    @OneToOne
     @MapsId
-    @JoinColumn(name = "persona_id")
-    private Persona persona;*/
+    @JoinColumn(name = "pedido_id")
+    private Pedido pedido;
 
-    private String razonSocial;
-    private Date fechaInicio;
-    private long cuit;
+    @ManyToOne
+    private ServicioPedido servicioPedido;
 
-    
 }

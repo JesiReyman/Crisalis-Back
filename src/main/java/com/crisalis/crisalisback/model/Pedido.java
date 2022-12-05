@@ -1,7 +1,8 @@
 package com.crisalis.crisalisback.model;
 
-import java.sql.Date;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -11,13 +12,12 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 public class Pedido {
@@ -26,11 +26,22 @@ public class Pedido {
     private long id;
 
     private Date fechaCreacion;
-
      
     @OneToMany(mappedBy = "pedido")
     private List<ItemPedido> listaDeItems = new ArrayList<ItemPedido>();
 
     @ManyToOne
+    @JsonIgnore
     private Persona persona;
+
+    public Pedido(long id, List<ItemPedido> listaDeItems, Persona persona) {
+        this.id = id;
+        this.fechaCreacion = new Date();
+        this.listaDeItems = listaDeItems;
+        this.persona = persona;
+    }
+
+    
+
+    
 }

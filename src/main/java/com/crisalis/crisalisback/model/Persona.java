@@ -3,15 +3,10 @@ package com.crisalis.crisalisback.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.*;
 
+import com.crisalis.crisalisback.security.entity.UsuarioLogin;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
@@ -20,6 +15,10 @@ import lombok.Setter;
 
 @Data
 @NoArgsConstructor
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name="tipo", 
+  discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("persona")
 @Entity
 public class Persona {
     @Id
@@ -30,11 +29,17 @@ public class Persona {
     private String apellido;
     private long dni;
 
-    @Getter (value = AccessLevel.NONE)
+    @JsonBackReference
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id")
+    @MapsId
+    private UsuarioLogin usuario;
+
+    /*@Getter (value = AccessLevel.NONE)
     @Setter(value = AccessLevel.NONE)
     @OneToOne(mappedBy = "persona", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
-    private Empresa empresa;
+    private Empresa empresa;*/
 
     @Getter (value = AccessLevel.NONE)
     @Setter(value = AccessLevel.NONE)
@@ -47,6 +52,8 @@ public class Persona {
         this.apellido = apellido;
         this.dni = dni;
     }
+
+    
 
     
  

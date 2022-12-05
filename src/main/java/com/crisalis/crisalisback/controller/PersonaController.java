@@ -19,7 +19,7 @@ public class PersonaController {
         this.personaService = personaService;
     }
 
-    @PostMapping("/nuevo")
+    @PostMapping("/nueva")
     public ResponseEntity<Persona> agregarPersona(@RequestBody Persona persona) {
         Persona nuevaPersona = personaService.agregarPersona(persona);
         return new ResponseEntity<>(nuevaPersona, HttpStatus.OK);
