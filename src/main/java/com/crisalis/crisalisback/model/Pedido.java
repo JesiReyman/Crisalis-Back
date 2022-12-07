@@ -41,7 +41,4 @@ public class Pedido {
         this.persona = persona;
     }
 
-    
-
-    
 }

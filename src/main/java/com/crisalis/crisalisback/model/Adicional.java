@@ -18,15 +18,11 @@ public class Adicional {
         return servicio.getPrecioBase() * IIBB;
     }
 
-    public double cargoGarantia(ProductoPedido productoPedido){
-        Producto producto = productoPedido.getProducto();
-        double precioBase = producto.getPrecioBase();
-        double precioTotalGarantia = incrementoGarantia * precioBase * productoPedido.getAniosDeGarantia();
-        return precioTotalGarantia;
+    public static double cargoGarantia(double precio, int aniosGarantia){
+        return incrementoGarantia * precio * aniosGarantia;
     }
 
-    public static double descuentoProducto(ProductoPedido producto){
-        double descuento = producto.getPrecioFinalUnitario() * descuentoProducto;
-        return descuento;
+    public static double descuentoProducto(double precioProducto){
+         return precioProducto * descuentoProducto;
     }
 }

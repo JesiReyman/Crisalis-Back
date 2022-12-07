@@ -28,11 +28,13 @@ public class ServicioPedidoService {
         this.iServicio = iServicio;
     }
 
-    public ServicioPedido agregarServicioPedido(ServicioPedido servicioPedido, Long idPedido, Long idServicio){
+    public ServicioPedido agregarServicioPedido(int cantidad, Long idPedido, Long idServicio){
+        ServicioPedido servicioPedido = new ServicioPedido();
         Pedido pedido = iPedido.findById(idPedido).orElseThrow();
         Servicio servicio = iServicio.findById(idServicio).orElseThrow();
         servicioPedido.setPedido(pedido);
         servicioPedido.setProducto(servicio);
+        servicioPedido.setCantidad(cantidad);
         double precioTotal = calculoPrecioTotal(servicio);
         System.out.println("El precio total mensual del servicio es de: " + precioTotal);
         servicioPedido.setPrecioFinalUnitario(precioTotal);

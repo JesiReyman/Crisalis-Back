@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +23,7 @@ public class PedidoController {
         this.pedidoService = pedidoService;
     }
 
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/{idPersona}/nuevo")
     public ResponseEntity<Pedido> agregarPedido(@PathVariable("idPersona") Long idPersona) {
         Pedido nuevoPedido = pedidoService.agregarPedidoAPersona(idPersona);

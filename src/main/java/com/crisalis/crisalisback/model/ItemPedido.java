@@ -1,14 +1,6 @@
 package com.crisalis.crisalisback.model;
 
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -28,6 +20,9 @@ public class ItemPedido {
     private long id;
     private int cantidad;
     private double precioFinalUnitario;
+
+    @Column(name = "tipo", insertable = false, updatable = false)
+    private String tipo;
  
     @ManyToOne
     @JsonIgnore

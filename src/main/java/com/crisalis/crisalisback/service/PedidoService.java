@@ -7,32 +7,30 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import com.crisalis.crisalisback.model.*;
+import com.crisalis.crisalisback.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.crisalis.crisalisback.model.Adicional;
-import com.crisalis.crisalisback.model.ItemPedido;
-import com.crisalis.crisalisback.model.Pedido;
-import com.crisalis.crisalisback.model.Persona;
-import com.crisalis.crisalisback.model.Producto;
-import com.crisalis.crisalisback.model.ProductoPedido;
-import com.crisalis.crisalisback.model.ServicioPedido;
-import com.crisalis.crisalisback.repository.IPedidoRepositorio;
-import com.crisalis.crisalisback.repository.IPersona;
-import com.crisalis.crisalisback.repository.IServicioPedido;
 
 @Service
 @Transactional
 public class PedidoService {
-    private IPedidoRepositorio iPedido;
-    private IPersona iPersona;
-    private IServicioPedido iServicioPedido;
-    
+    private final IPedidoRepositorio iPedido;
+    private final IPersona iPersona;
+    private final IServicioPedido iServicioPedido;
+
+    private final IProductoPedido iProductoPedido;
+
+
     @Autowired
-    public PedidoService(IPedidoRepositorio iPedido, IPersona iPersona, IServicioPedido iServicioPedido) {
+    public PedidoService(IPedidoRepositorio iPedido,
+                         IPersona iPersona,
+                         IServicioPedido iServicioPedido,
+                         IProductoPedido iProductoPedido) {
         this.iPedido = iPedido;
         this.iPersona = iPersona;
         this.iServicioPedido = iServicioPedido;
+        this.iProductoPedido = iProductoPedido;
     }
 
     public Pedido agregarPedidoAPersona(Long idPersona){
@@ -46,7 +44,7 @@ public class PedidoService {
     }
 
     public Pedido crearPedido(int idPersona, List<Producto> listaProductos){
-        //double descuento = 
+
         return null;
     }
 
@@ -55,16 +53,20 @@ public class PedidoService {
     }
 
 
-    public void aplicarDescuentoAProducto(Long idPedido){
-        Pedido pedido = iPedido.findById(idPedido).orElseThrow();
-        List<ItemPedido> listaItemPedidos = pedido.getListaDeItems();
-        //filtrar la lista para que solo contenga productos
-        
+    public double calculoDescuento(Long idPedido){
 
+        List<ProductoPedido> listaProductosPedidos = iProductoPedido.findByPedidoId(idPedido);
+        double descuento = 0;
+        for (ProductoPedido productoPedido : listaProductosPedidos){
+            Producto producto = productoPedido.getProducto();
+            double precio = producto.getPrecioBase();
+            descuento += Adicional.descuentoProducto(precio);
+        }
+        return descuento;
     }
 
-    public boolean tieneServicioActivo(Long idPersona){
-        boolean tieneServicioActivo = false;
+    public ServicioPedido servicioActivo(Long idPersona){
+        ServicioPedido servicioActivo = new ServicioPedido();
         List<Pedido> listaPedidos = listarPedidosPorPersonaFechaAsc(idPersona);
         //recorro la lista
         for(Pedido pedido : listaPedidos){
@@ -74,12 +76,38 @@ public class PedidoService {
             for (ServicioPedido servicioPedido : serviciosPedidos){
                 boolean estaActivo = servicioPedido.isActivo();
                 if(estaActivo){
-                    tieneServicioActivo = !tieneServicioActivo;
+                    servicioActivo = servicioPedido;
                     break;
                 }
             }
         }
-
-        return tieneServicioActivo;
+        return servicioActivo;
     }
+
+    public double aceptarPedido(Long idPedido){
+        Pedido pedido = iPedido.findById(idPedido).orElseThrow();
+        Persona persona = pedido.getPersona();
+        List<ItemPedido> items = pedido.getListaDeItems();
+        double precioTotal = 0;
+        for (ItemPedido item : items){
+            precioTotal += item.getPrecioFinalUnitario();
+        }
+
+        double descuentoCalculado = 0;
+        ServicioPedido servicioActivo = servicioActivo(persona.getId());
+        if (servicioActivo.getPedido() != null ){
+            descuentoCalculado = calculoDescuento(idPedido);
+            Descuento descuento = new Descuento();
+            descuento.setDescuentoGenerado(descuentoCalculado);
+            descuento.setPedido(pedido);
+            descuento.setServicioPedido(servicioActivo);
+
+        }
+
+        double precioFinalPedido = precioTotal - descuentoCalculado;
+
+        return precioFinalPedido;
+    }
+
+
 }
