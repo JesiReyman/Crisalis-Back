@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import com.crisalis.crisalisback.dto.ItemPedidoDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,14 +33,18 @@ public class ProductoPedidoService {
         this.iProducto = iProducto;
     }
 
-    public ProductoPedido agregarProductoPedido(ProductoPedido productoPedido, Long idPedido, Long idProducto){
+    public ProductoPedido agregarProductoPedido(ItemPedidoDto itemPedidoDto, Pedido pedido, Long idProducto){
         Producto producto = iProducto.findById(idProducto).orElseThrow();
-        Pedido pedido = iPedido.findById(idPedido).orElseThrow();
+        ProductoPedido productoPedido = new ProductoPedido();
         productoPedido.setProducto(producto);
         productoPedido.setPedido(pedido);
+        int aniosGarantia = itemPedidoDto.getAniosDeGarantia();
+        productoPedido.setAniosDeGarantia(aniosGarantia);
+        int cantidad = itemPedidoDto.getCantidad();
+        productoPedido.setCantidad(cantidad);
 
         double precioBase = producto.getPrecioBase();
-        int aniosGarantia = productoPedido.getAniosDeGarantia();
+
         double precioTotal = calculoPrecioTotal(precioBase, aniosGarantia);
         productoPedido.setPrecioFinalUnitario(precioTotal);
         
@@ -52,5 +57,15 @@ public class ProductoPedidoService {
         double garantia = Adicional.cargoGarantia(precio, aniosGarantia);
         return precio + impuestoIVA + garantia;
     }
+
+    public void borrarProductoPedido(Long idProductoPedido){
+        iProductoPedido.deleteById(idProductoPedido);
+    }
+
+    /*public ProductoPedido agregarProducto(ProductoPedido productoPedido, Long idProducto){
+        Producto producto = iProducto.findById(idProducto).orElseThrow();
+        productoPedido.setProducto(producto);
+        iProductoPedido.sa
+    }*/
 
 }

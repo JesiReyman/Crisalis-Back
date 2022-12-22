@@ -26,8 +26,10 @@ public class Pedido {
     private long id;
 
     private Date fechaCreacion;
+
+    private String estado;
      
-    @OneToMany(mappedBy = "pedido")
+    @OneToMany(mappedBy = "pedido", orphanRemoval = true)
     private List<ItemPedido> listaDeItems = new ArrayList<ItemPedido>();
 
     @ManyToOne

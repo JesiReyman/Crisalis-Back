@@ -34,8 +34,7 @@ public class UsuarioLoginService {
     public void save(UsuarioLogin usuario){
        UsuarioLogin nuevoUsuario = usuario;
        Persona nuevaPersona = new Persona();
-        nuevaPersona.setNombre(nuevoUsuario.getNombre());
-       nuevoUsuario.addPerfil(nuevaPersona);
+       nuevaPersona.setNombre(nuevoUsuario.getNombre());
        usuarioRepository.save(nuevoUsuario);
        iPersona.save(nuevaPersona);
     }

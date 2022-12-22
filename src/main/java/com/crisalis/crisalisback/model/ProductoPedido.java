@@ -10,14 +10,16 @@ import lombok.Setter;
 
 @Getter @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @DiscriminatorValue("producto")
 public class ProductoPedido extends ItemPedido{
 
     private int aniosDeGarantia;
 
-    
+    public ProductoPedido(int cantidad, Producto producto, Pedido pedido, int aniosDeGarantia) {
+        super(cantidad, producto, pedido);
+        this.aniosDeGarantia = aniosDeGarantia;
+    }
 }
 
 

@@ -17,8 +17,8 @@ public class ServicioPedido extends ItemPedido{
     
     private boolean activo;
 
-    public ServicioPedido(long id, int cantidad, Producto producto, Pedido pedido) {
-        super(id, cantidad, producto, pedido);
+    public ServicioPedido(int cantidad, Producto producto, Pedido pedido) {
+        super(cantidad, producto, pedido);
         this.activo = false;
     }
 

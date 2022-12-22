@@ -43,9 +43,8 @@ public class PedidoService {
         return iPedido.findByPersonaIdOrderByFechaCreacionAsc(idPersona);
     }
 
-    public Pedido crearPedido(int idPersona, List<Producto> listaProductos){
-
-        return null;
+    public void eliminarPedido(Long idPedido){
+        iPedido.deleteById(idPedido);
     }
 
     public Pedido detallePedido(Long idPedido){

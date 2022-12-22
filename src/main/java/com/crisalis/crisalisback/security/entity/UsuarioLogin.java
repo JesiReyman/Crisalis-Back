@@ -51,9 +51,9 @@ public class UsuarioLogin {
     
     private Set<Rol> roles = new HashSet<>();
 
-    @JsonManagedReference
+    /*@JsonManagedReference
     @OneToOne(mappedBy="usuario", cascade = {CascadeType.MERGE}, orphanRemoval = true)
-    private Persona persona;
+    private Persona persona;*/
     
     public UsuarioLogin(String nombre, String nombreUsuario, String email, String password) {
         this.nombre = nombre;
@@ -61,9 +61,10 @@ public class UsuarioLogin {
         this.email = email;
         this.password = password;
     }
-    
-    public void addPerfil(Persona persona) {
-       // perfil.add(perfil);
+
+    /*public void addPersona(Persona persona) {
+        // perfil.add(perfil);
         persona.setUsuario(this);
-    }
+    }*/
+
 }

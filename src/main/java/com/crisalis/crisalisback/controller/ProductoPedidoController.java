@@ -17,12 +17,22 @@ public class ProductoPedidoController {
         this.productoPedidoService = productoPedidoService;
     }
 
-    @PreAuthorize("hasRole('USER')")
+    /*@PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/{idPedido}/{idProducto}")
     public ResponseEntity<ProductoPedido> pedirProducto(@RequestBody ProductoPedido productoPedido, @PathVariable("idPedido") Long idPedido,
                                                         @PathVariable("idProducto") Long idProducto) {
         ProductoPedido nuevoProductoPedido = productoPedidoService.agregarProductoPedido(productoPedido, idPedido, idProducto);
         return new ResponseEntity<>(nuevoProductoPedido, HttpStatus.OK);
+    }*/
+
+    @DeleteMapping("borrar/{idProductoPedido}")
+    public void eliminarProductoPedido(@PathVariable("idProductoPedido") Long idProductoPedido){
+        productoPedidoService.borrarProductoPedido(idProductoPedido);
     }
+
+    /*@PostMapping("{idProducto}")
+    public ResponseEntity<ProductoPedido> agregar(@RequestBody ProductoPedido productoPedido, @PathVariable("idProducto") Long idProductoPedido){
+        ProductoPedido producto =
+    }*/
 
 }

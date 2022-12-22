@@ -29,11 +29,11 @@ public class Persona {
     private String apellido;
     private long dni;
 
-    @JsonBackReference
+    /*@JsonBackReference
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id")
     @MapsId
-    private UsuarioLogin usuario;
+    private UsuarioLogin usuario;*/
 
     /*@Getter (value = AccessLevel.NONE)
     @Setter(value = AccessLevel.NONE)

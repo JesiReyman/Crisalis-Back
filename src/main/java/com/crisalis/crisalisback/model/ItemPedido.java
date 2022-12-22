@@ -32,8 +32,7 @@ public class ItemPedido {
     @JsonIgnore
     private Pedido pedido;
 
-    public ItemPedido(long id, int cantidad, Producto producto, Pedido pedido) {
-      this.id = id;
+    public ItemPedido(int cantidad, Producto producto, Pedido pedido) {
       this.cantidad = cantidad;
       this.producto = producto;
       this.pedido = pedido;

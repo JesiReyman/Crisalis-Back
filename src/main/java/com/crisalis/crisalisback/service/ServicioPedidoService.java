@@ -2,6 +2,7 @@ package com.crisalis.crisalisback.service;
 
 import javax.transaction.Transactional;
 
+import com.crisalis.crisalisback.dto.ItemPedidoDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,13 +29,12 @@ public class ServicioPedidoService {
         this.iServicio = iServicio;
     }
 
-    public ServicioPedido agregarServicioPedido(int cantidad, Long idPedido, Long idServicio){
+    public ServicioPedido agregarServicioPedido(ItemPedidoDto itemPedidoDto, Pedido pedido, Long id){
         ServicioPedido servicioPedido = new ServicioPedido();
-        Pedido pedido = iPedido.findById(idPedido).orElseThrow();
-        Servicio servicio = iServicio.findById(idServicio).orElseThrow();
+        Servicio servicio = iServicio.findById(id).orElseThrow();
         servicioPedido.setPedido(pedido);
         servicioPedido.setProducto(servicio);
-        servicioPedido.setCantidad(cantidad);
+        servicioPedido.setCantidad(itemPedidoDto.getCantidad());
         double precioTotal = calculoPrecioTotal(servicio);
         System.out.println("El precio total mensual del servicio es de: " + precioTotal);
         servicioPedido.setPrecioFinalUnitario(precioTotal);
@@ -47,6 +47,11 @@ public class ServicioPedidoService {
         double precioTotalUnitario = precioBase + totalImpuestos + servicio.getPrecioSoporte();
 
         return precioTotalUnitario;
+    }
+
+    public void borrarServicioPedido(Long idServicioPedido){
+
+        iServicioPedido.deleteById(idServicioPedido);
     }
 
     

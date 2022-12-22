@@ -16,5 +16,8 @@ import lombok.Setter;
 public class Servicio extends Producto{
     private double precioSoporte;
 
-    
+    public Servicio(String nombre, String descripcion, double precioBase, double precioSoporte) {
+        super(nombre, descripcion, precioBase);
+        this.precioSoporte = precioSoporte;
+    }
 }

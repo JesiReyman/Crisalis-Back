@@ -16,24 +16,21 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 
 @Getter @Setter
-@RequiredArgsConstructor
-@NoArgsConstructor(force = true)
+//@RequiredArgsConstructor
+//@NoArgsConstructor(force = true)
+@NoArgsConstructor
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name="tipo", 
-  discriminatorType = DiscriminatorType.STRING)
+//@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+/*@DiscriminatorColumn(name="tipo",
+  discriminatorType = DiscriminatorType.STRING)*/
 @DiscriminatorValue("producto")
-public class Producto {
+public class Producto extends ProductoBase{
 
-    @Id
+    /*@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
@@ -48,7 +45,9 @@ public class Producto {
     @Getter (value = AccessLevel.NONE)
     @Setter(value = AccessLevel.NONE)
     @OneToMany(mappedBy = "producto")
-    private List<ItemPedido> listaDeItems = new ArrayList<ItemPedido>();
+    private List<ItemPedido> listaDeItems = new ArrayList<ItemPedido>();*/
 
-
+    public Producto(String nombre, String descripcion, double precioBase) {
+        super(nombre, descripcion, precioBase);
+    }
 }
