@@ -3,9 +3,9 @@ package com.crisalis.crisalisback.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.crisalis.crisalisback.model.Empresa;
+import com.crisalis.crisalisback.model.EmpresaCliente;
 
 @Repository
-public interface IEmpresa extends JpaRepository<Empresa, Long>{
+public interface IEmpresa extends JpaRepository<EmpresaCliente, Long>{
     
 }

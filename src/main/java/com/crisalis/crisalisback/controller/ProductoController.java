@@ -2,14 +2,11 @@ package com.crisalis.crisalisback.controller;
 
 import java.util.List;
 
+import com.crisalis.crisalisback.dto.ProductoDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.crisalis.crisalisback.model.Producto;
 import com.crisalis.crisalisback.service.ProductoService;
@@ -25,14 +22,42 @@ public class ProductoController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/nuevo")
-    public ResponseEntity<Producto> agregarProducto(@RequestBody Producto producto) {
-        Producto nuevoProducto = productoService.agregarProducto(producto);
+    public ResponseEntity<Producto> agregarProducto(@RequestBody ProductoDTO productoDTO) {
+        Producto nuevoProducto = productoService.agregarProducto(productoDTO);
         return new ResponseEntity<>(nuevoProducto, HttpStatus.OK);
     }
 
     @GetMapping("/lista")
-    public ResponseEntity<List<Producto>> listarProductos() {
-        List<Producto> listaDeProductos = productoService.listarProductos();
+    public ResponseEntity<List<ProductoDTO>> listarProductos() {
+        List<ProductoDTO> listaDeProductos = productoService.listarProductos();
         return new ResponseEntity<>(listaDeProductos, HttpStatus.OK);
+    }
+
+    /*@GetMapping("{idProducto}")
+    public ResponseEntity<Producto> traerProducto(@PathVariable("idProducto") Long idProducto){
+        Producto producto = productoService.traerProducto(idProducto);
+        return new ResponseEntity<>(producto, HttpStatus.OK);
+    }*/
+
+    @GetMapping("traer/{nombreProducto}")
+    public ResponseEntity<ProductoDTO> traerProductoPorNombre(@PathVariable("nombreProducto") String nombreProducto){
+        ProductoDTO producto = productoService.traerProductoDTOByNombre(nombreProducto);
+        return new ResponseEntity<>(producto, HttpStatus.OK);
+    }
+
+    /*@DeleteMapping("eliminar/{idProducto}")
+    public void eliminarProducto(@PathVariable("idProducto") Long idProducto){
+        productoService.eliminarProducto(idProducto);
+    }*/
+
+    @DeleteMapping("eliminar/{nombreProducto}")
+    public void eliminarProducto(@PathVariable("nombreProducto") String nombreProducto){
+        productoService.eliminarProductoPorNombre(nombreProducto);
+    }
+
+    @PutMapping("editar/{nombreProducto}")
+    public ResponseEntity<ProductoDTO> editarProducto(@PathVariable("nombreProducto") String nombreProducto, @RequestBody ProductoDTO productoDTO){
+        ProductoDTO productoEditado = productoService.editarProducto(nombreProducto, productoDTO);
+        return new ResponseEntity<>(productoEditado, HttpStatus.OK);
     }
 }

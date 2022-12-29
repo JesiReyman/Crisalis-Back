@@ -2,7 +2,7 @@
 package com.crisalis.crisalisback.security.service;
 
 import com.crisalis.crisalisback.model.Persona;
-import com.crisalis.crisalisback.repository.IPersona;
+import com.crisalis.crisalisback.repository.IClienteRepository;
 import com.crisalis.crisalisback.security.entity.UsuarioLogin;
 import com.crisalis.crisalisback.security.repository.UsuarioRepository;
 import java.util.Optional;
@@ -17,7 +17,7 @@ public class UsuarioLoginService {
     UsuarioRepository usuarioRepository;
     
     @Autowired
-    IPersona iPersona;
+    IClienteRepository iClienteRepository;
     
     public Optional<UsuarioLogin> getByNombreUsuario(String nombreUsuario){
         return usuarioRepository.findByNombreUsuario(nombreUsuario);
@@ -33,10 +33,7 @@ public class UsuarioLoginService {
     
     public void save(UsuarioLogin usuario){
        UsuarioLogin nuevoUsuario = usuario;
-       Persona nuevaPersona = new Persona();
-       nuevaPersona.setNombre(nuevoUsuario.getNombre());
        usuarioRepository.save(nuevoUsuario);
-       iPersona.save(nuevaPersona);
     }
     
     public void delete(String nombreUsuario){

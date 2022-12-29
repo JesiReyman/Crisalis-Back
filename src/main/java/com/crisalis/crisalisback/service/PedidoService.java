@@ -1,9 +1,7 @@
 package com.crisalis.crisalisback.service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -16,36 +14,47 @@ import org.springframework.stereotype.Service;
 @Transactional
 public class PedidoService {
     private final IPedidoRepositorio iPedido;
-    private final IPersona iPersona;
+    private final IClienteRepository iClienteRepository;
     private final IServicioPedido iServicioPedido;
 
     private final IProductoPedido iProductoPedido;
+    private EmpresaClienteService empresaClienteService;
 
 
     @Autowired
     public PedidoService(IPedidoRepositorio iPedido,
-                         IPersona iPersona,
+                         IClienteRepository iClienteRepository,
                          IServicioPedido iServicioPedido,
                          IProductoPedido iProductoPedido) {
         this.iPedido = iPedido;
-        this.iPersona = iPersona;
+        this.iClienteRepository = iClienteRepository;
         this.iServicioPedido = iServicioPedido;
         this.iProductoPedido = iProductoPedido;
     }
 
-    public Pedido agregarPedidoAPersona(Long idPersona){
-        Persona persona = iPersona.findById(idPersona).orElseThrow();
-        Pedido pedido = new Pedido(0, null, persona);
+    public Pedido agregarPedidoACliente(Cliente cliente){
+        //Cliente cliente = iClienteRepository.findById(idCliente).orElseThrow();
+        Pedido pedido = new Pedido(cliente);
         return iPedido.save(pedido);
     }
 
-    public List<Pedido> listarPedidosPorPersonaFechaAsc(Long idPersona) {
-        return iPedido.findByPersonaIdOrderByFechaCreacionAsc(idPersona);
+    public Pedido agregarPedidoACliente(EmpresaCliente empresaCliente, Pedido pedido){
+        //Cliente cliente = iClienteRepository.findById(idCliente).orElseThrow();
+        //EmpresaCliente empresaCliente = empresaClienteService.trearEmpresaCliente(idEmpresa);
+        //Pedido pedido = new Pedido(cliente, empresaCliente);
+        pedido.setEmpresaCliente(empresaCliente);
+        return iPedido.save(pedido);
+    }
+
+    public List<Pedido> listarPedidosPorClienteFechaAsc(Long idPersona) {
+        return iPedido.findByClienteIdOrderByFechaCreacionAsc(idPersona);
     }
 
     public void eliminarPedido(Long idPedido){
         iPedido.deleteById(idPedido);
     }
+
+
 
     public Pedido detallePedido(Long idPedido){
         return iPedido.findById(idPedido).orElseThrow();
@@ -57,7 +66,7 @@ public class PedidoService {
         List<ProductoPedido> listaProductosPedidos = iProductoPedido.findByPedidoId(idPedido);
         double descuento = 0;
         for (ProductoPedido productoPedido : listaProductosPedidos){
-            Producto producto = productoPedido.getProducto();
+            ProductoBase producto = productoPedido.getProductoBase();
             double precio = producto.getPrecioBase();
             descuento += Adicional.descuentoProducto(precio);
         }
@@ -66,7 +75,7 @@ public class PedidoService {
 
     public ServicioPedido servicioActivo(Long idPersona){
         ServicioPedido servicioActivo = new ServicioPedido();
-        List<Pedido> listaPedidos = listarPedidosPorPersonaFechaAsc(idPersona);
+        List<Pedido> listaPedidos = listarPedidosPorClienteFechaAsc(idPersona);
         //recorro la lista
         for(Pedido pedido : listaPedidos){
             //extraigo el id del pedido para luego buscar en la lista de servicios
@@ -85,7 +94,7 @@ public class PedidoService {
 
     public double aceptarPedido(Long idPedido){
         Pedido pedido = iPedido.findById(idPedido).orElseThrow();
-        Persona persona = pedido.getPersona();
+        Cliente cliente = pedido.getCliente();
         List<ItemPedido> items = pedido.getListaDeItems();
         double precioTotal = 0;
         for (ItemPedido item : items){
@@ -93,7 +102,7 @@ public class PedidoService {
         }
 
         double descuentoCalculado = 0;
-        ServicioPedido servicioActivo = servicioActivo(persona.getId());
+        ServicioPedido servicioActivo = servicioActivo(cliente.getId());
         if (servicioActivo.getPedido() != null ){
             descuentoCalculado = calculoDescuento(idPedido);
             Descuento descuento = new Descuento();

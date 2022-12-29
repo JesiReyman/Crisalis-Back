@@ -34,13 +34,21 @@ public class Pedido {
 
     @ManyToOne
     @JsonIgnore
-    private Persona persona;
+    private Cliente cliente;
 
-    public Pedido(long id, List<ItemPedido> listaDeItems, Persona persona) {
-        this.id = id;
+    @ManyToOne
+    @JsonIgnore
+    private EmpresaCliente empresaCliente;
+
+    public Pedido(Cliente cliente) {
         this.fechaCreacion = new Date();
-        this.listaDeItems = listaDeItems;
-        this.persona = persona;
+        this.estado = "Pendiente";
+        this.cliente = cliente;
     }
 
+    public Pedido(EmpresaCliente empresa) {
+        this.fechaCreacion = new Date();
+        this.estado = "Pendiente";
+        this.empresaCliente = empresa;
+    }
 }

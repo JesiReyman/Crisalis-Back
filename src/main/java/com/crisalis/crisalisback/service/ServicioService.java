@@ -1,9 +1,11 @@
 package com.crisalis.crisalisback.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import com.crisalis.crisalisback.dto.ServicioDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,11 +23,31 @@ public class ServicioService {
         this.iServicio = iServicio;
     }
 
-    public Servicio agregarServicio(Servicio servicio){
-        return iServicio.save(servicio);
+    public ServicioDTO agregarServicio(ServicioDTO servicioDTO){
+        Servicio servicio = new Servicio(servicioDTO);
+        return iServicio.save(servicio).servicioAservicioDTO();
     }
 
-    public List<Servicio> listarServicios() {
-        return iServicio.findAll();
+    public List<ServicioDTO> listarServicios() {
+        return iServicio.findAll().stream()
+                .map(Servicio::servicioAservicioDTO)
+                .collect(Collectors.toList());
+    }
+
+    public void eliminarServicio(String nombre){
+        iServicio.deleteByNombre(nombre);
+    }
+
+    public ServicioDTO editarServicio(String nombre, ServicioDTO servicioDTO){
+        Servicio servicioAEditar = iServicio.findByNombre(nombre);
+        servicioAEditar.setNombre(servicioDTO.getNombre());
+        servicioAEditar.setDescripcion(servicioDTO.getDescripcion());
+        servicioAEditar.setPrecioBase(servicioDTO.getPrecioBase());
+        servicioAEditar.setPrecioSoporte(servicioDTO.getPrecioSoporte());
+        return iServicio.save(servicioAEditar).servicioAservicioDTO();
+    }
+
+    public ServicioDTO buscarServicio(String nombreServicio){
+        return iServicio.findByNombre(nombreServicio).servicioAservicioDTO();
     }
 }

@@ -5,7 +5,6 @@ import java.util.List;
 import com.crisalis.crisalisback.repository.IPedidoRepositorio;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.crisalis.crisalisback.model.Pedido;
@@ -32,7 +31,7 @@ public class PedidoController {
 
     @GetMapping("/{idPersona}/lista")
     public ResponseEntity<List<Pedido>> listarPedidosDePersona(@PathVariable("idPersona") Long idPersona) {
-        List<Pedido> listaPedido = pedidoService.listarPedidosPorPersonaFechaAsc(idPersona);
+        List<Pedido> listaPedido = pedidoService.listarPedidosPorClienteFechaAsc(idPersona);
         return new ResponseEntity<>(listaPedido, HttpStatus.OK);
     }
 

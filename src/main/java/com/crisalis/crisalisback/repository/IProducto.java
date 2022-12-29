@@ -9,5 +9,6 @@ import com.crisalis.crisalisback.model.Producto;
 
 @Repository
 public interface IProducto extends JpaRepository<Producto, Long>{
-    List<Producto> findByTipo(String tipo);
+    public Producto findByNombre(String nombre);
+    public void deleteByNombre(String nombre);
 }

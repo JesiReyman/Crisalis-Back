@@ -9,7 +9,7 @@ import com.crisalis.crisalisback.model.Pedido;
 
 @Repository
 public interface IPedidoRepositorio extends JpaRepository<Pedido, Long>{
-    List<Pedido> findByPersonaId(Long personaId);
+    List<Pedido> findByClienteId(Long personaId);
 
-    List<Pedido> findByPersonaIdOrderByFechaCreacionAsc(Long personaId);
+    List<Pedido> findByClienteIdOrderByFechaCreacionAsc(Long personaId);
 }

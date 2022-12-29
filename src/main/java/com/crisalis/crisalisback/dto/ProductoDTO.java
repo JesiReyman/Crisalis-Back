@@ -1,14 +1,15 @@
 package com.crisalis.crisalisback.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class ItemPedidoDto {
-    private int cantidad;
-    private int aniosDeGarantia;
+@Builder
+public class ProductoDTO {
     private String nombre;
+    private String descripcion;
+    private int stock;
+    private double precioBase;
 }

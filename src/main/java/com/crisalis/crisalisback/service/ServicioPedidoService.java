@@ -33,7 +33,7 @@ public class ServicioPedidoService {
         ServicioPedido servicioPedido = new ServicioPedido();
         Servicio servicio = iServicio.findById(id).orElseThrow();
         servicioPedido.setPedido(pedido);
-        servicioPedido.setProducto(servicio);
+        servicioPedido.setProductoBase(servicio);
         servicioPedido.setCantidad(itemPedidoDto.getCantidad());
         double precioTotal = calculoPrecioTotal(servicio);
         System.out.println("El precio total mensual del servicio es de: " + precioTotal);

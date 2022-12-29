@@ -16,6 +16,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
 
+import com.crisalis.crisalisback.dto.ProductoDTO;
 import lombok.*;
 
 
@@ -24,6 +25,7 @@ import lombok.*;
 //@NoArgsConstructor(force = true)
 @NoArgsConstructor
 @Entity
+
 //@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 /*@DiscriminatorColumn(name="tipo",
   discriminatorType = DiscriminatorType.STRING)*/
@@ -46,8 +48,37 @@ public class Producto extends ProductoBase{
     @Setter(value = AccessLevel.NONE)
     @OneToMany(mappedBy = "producto")
     private List<ItemPedido> listaDeItems = new ArrayList<ItemPedido>();*/
+    private int stock;
 
-    public Producto(String nombre, String descripcion, double precioBase) {
-        super(nombre, descripcion, precioBase);
+    /*@Getter(value = AccessLevel.NONE)
+    @Setter(value = AccessLevel.NONE)
+    @OneToMany(mappedBy = "producto")
+    private List<ProductoPedido> listaProductosPedidos = new ArrayList<ProductoPedido>();*/
+
+
+    public Producto(String tipo, String nombre, String descripcion, double precioBase, int stock) {
+        super(tipo, nombre, descripcion, precioBase);
+        this.stock = stock;
     }
+
+    public Producto(String nombre, String descripcion, double precioBase, int stock) {
+        super(nombre, descripcion, precioBase);
+        this.stock = stock;
+    }
+
+    public Producto(ProductoDTO productoDTO){
+        super(productoDTO.getNombre(), productoDTO.getDescripcion(), productoDTO.getPrecioBase());
+        this.stock = productoDTO.getStock();
+    }
+
+    public ProductoDTO productoAproductoDTO(){
+        return ProductoDTO.builder()
+                .nombre(this.getNombre())
+                .descripcion(this.getDescripcion())
+                .stock(this.stock)
+                .precioBase(this.getPrecioBase())
+                .build();
+    }
+
+
 }

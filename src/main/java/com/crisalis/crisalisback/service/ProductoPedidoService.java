@@ -5,14 +5,10 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import com.crisalis.crisalisback.dto.ItemPedidoDto;
+import com.crisalis.crisalisback.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.crisalis.crisalisback.model.Adicional;
-import com.crisalis.crisalisback.model.Pedido;
-import com.crisalis.crisalisback.model.Producto;
-import com.crisalis.crisalisback.model.ProductoPedido;
-import com.crisalis.crisalisback.model.ServicioPedido;
 import com.crisalis.crisalisback.repository.IPedidoRepositorio;
 import com.crisalis.crisalisback.repository.IProducto;
 import com.crisalis.crisalisback.repository.IProductoPedido;
@@ -24,6 +20,8 @@ public class ProductoPedidoService {
     private IProductoPedido iProductoPedido;
     private IPedidoRepositorio iPedido;
     private IProducto iProducto;
+    private PedidoService pedidoService;
+    private ProductoService productoService;
 
 
     @Autowired
@@ -34,14 +32,17 @@ public class ProductoPedidoService {
     }
 
     public ProductoPedido agregarProductoPedido(ItemPedidoDto itemPedidoDto, Pedido pedido, Long idProducto){
-        Producto producto = iProducto.findById(idProducto).orElseThrow();
+        //Producto producto = iProducto.findById(idProducto).orElseThrow();
+        Producto producto = productoService.traerProducto(idProducto);
         ProductoPedido productoPedido = new ProductoPedido();
-        productoPedido.setProducto(producto);
+        productoPedido.setProductoBase(producto);
         productoPedido.setPedido(pedido);
         int aniosGarantia = itemPedidoDto.getAniosDeGarantia();
         productoPedido.setAniosDeGarantia(aniosGarantia);
         int cantidad = itemPedidoDto.getCantidad();
         productoPedido.setCantidad(cantidad);
+        productoService.restarStock(producto, cantidad);
+
 
         double precioBase = producto.getPrecioBase();
 
@@ -62,10 +63,15 @@ public class ProductoPedidoService {
         iProductoPedido.deleteById(idProductoPedido);
     }
 
-    /*public ProductoPedido agregarProducto(ProductoPedido productoPedido, Long idProducto){
+    public double calculoDescuento(Long idCliente, Long idProducto){
         Producto producto = iProducto.findById(idProducto).orElseThrow();
-        productoPedido.setProducto(producto);
-        iProductoPedido.sa
-    }*/
+        ServicioPedido servicioActivo = pedidoService.servicioActivo(idCliente);
+        double descuento = 0;
+        if(servicioActivo.getPedido() != null){
+            double precioBase = producto.getPrecioBase();
+            descuento = Adicional.descuentoProducto(precioBase);
+        }
+        return descuento;
+    }
 
 }

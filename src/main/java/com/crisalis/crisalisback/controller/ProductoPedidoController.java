@@ -30,9 +30,9 @@ public class ProductoPedidoController {
         productoPedidoService.borrarProductoPedido(idProductoPedido);
     }
 
-    /*@PostMapping("{idProducto}")
-    public ResponseEntity<ProductoPedido> agregar(@RequestBody ProductoPedido productoPedido, @PathVariable("idProducto") Long idProductoPedido){
-        ProductoPedido producto =
-    }*/
+    @GetMapping("{idCliente}/{idProducto}")
+    public double calcularDescuento(@PathVariable("idCliente") Long idCliente, @PathVariable("idProducto") Long idProducto){
+        return productoPedidoService.calculoDescuento(idCliente, idProducto);
+    }
 
 }

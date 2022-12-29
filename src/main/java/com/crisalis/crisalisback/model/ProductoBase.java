@@ -1,13 +1,16 @@
 package com.crisalis.crisalisback.model;
 
+import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Getter @Setter
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
+//@AllArgsConstructor
 @NoArgsConstructor(force = true)
 @Entity
 @Table(name="inventario")
@@ -23,12 +26,27 @@ public abstract class ProductoBase {
     @Column(name = "tipo", insertable = false, updatable = false)
     private String tipo;
 
-    final private String nombre;
-    final private String descripcion;
-    final private double precioBase;
+    @NotNull
+    @Column(unique = true)
+    private String nombre;
+    private String descripcion;
+    private double precioBase;
 
     @Getter(value = AccessLevel.NONE)
     @Setter(value = AccessLevel.NONE)
-    @OneToMany(mappedBy = "producto")
+    @OneToMany(mappedBy = "productoBase")
     private List<ItemPedido> listaDeItems = new ArrayList<ItemPedido>();
+
+    public ProductoBase(String tipo, String nombre, String descripcion, double precioBase) {
+        this.tipo = tipo;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.precioBase = precioBase;
+    }
+
+    public ProductoBase(String nombre, String descripcion, double precioBase) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.precioBase = precioBase;
+    }
 }

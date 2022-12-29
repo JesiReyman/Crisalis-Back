@@ -2,14 +2,11 @@ package com.crisalis.crisalisback.controller;
 
 import java.util.List;
 
+import com.crisalis.crisalisback.dto.ServicioDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.crisalis.crisalisback.model.Servicio;
 import com.crisalis.crisalisback.service.ServicioService;
@@ -26,14 +23,31 @@ public class ServicioController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/nuevo")
-    public ResponseEntity<Servicio> agregarServicio(@RequestBody Servicio servicio) {
-        Servicio nuevoServicio = servicioService.agregarServicio(servicio);
+    public ResponseEntity<ServicioDTO> agregarServicio(@RequestBody ServicioDTO servicio) {
+        ServicioDTO nuevoServicio = servicioService.agregarServicio(servicio);
         return new ResponseEntity<>(nuevoServicio, HttpStatus.OK);
     }
 
     @GetMapping("/lista")
-    public ResponseEntity<List<Servicio>> listarServicios() {
-        List<Servicio> listaDeServicios = servicioService.listarServicios();
+    public ResponseEntity<List<ServicioDTO>> listarServicios() {
+        List<ServicioDTO> listaDeServicios = servicioService.listarServicios();
         return new ResponseEntity<>(listaDeServicios, HttpStatus.OK);
+    }
+
+    @GetMapping("{nombreServicio}")
+    public ResponseEntity<ServicioDTO> traerServicio(@PathVariable("nombreServicio") String nombreServicio){
+        ServicioDTO servicioDTO = servicioService.buscarServicio(nombreServicio);
+        return new ResponseEntity<>(servicioDTO, HttpStatus.OK);
+    }
+
+    @DeleteMapping("eliminar/{nombreServicio}")
+    public void eliminarServicio(@PathVariable("nombreServicio") String nombreServicio){
+        servicioService.eliminarServicio(nombreServicio);
+    }
+
+    @PutMapping("editar/{nombreServicio}")
+    public ResponseEntity<ServicioDTO> editarServicio(@PathVariable("nombreServicio") String nombreServicio, @RequestBody ServicioDTO servicioDTO){
+        ServicioDTO servicioEditado = servicioService.editarServicio(nombreServicio, servicioDTO);
+        return new ResponseEntity<>(servicioEditado, HttpStatus.OK);
     }
 }

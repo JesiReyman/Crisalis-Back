@@ -14,24 +14,25 @@ import java.util.Objects;
 @Transactional
 public class ItemPedidoService {
     private final IItemPedidoRepository iItemPedidoRepository;
-    private IPersona iPersona;
-    private IProducto iProducto;
+    private IClienteRepository iClienteRepository;
+    private IProductoBaseRepository iProductoBase;
     private ProductoPedidoService productoPedidoService;
     private ServicioPedidoService servicioPedidoService;
     private PedidoService pedidoService;
+    private ClienteService clienteService;
 
     @Autowired
     public ItemPedidoService(IItemPedidoRepository iItemPedidoRepository,
                              IProductoPedido iProductoPedido,
-                             IServicioPedido iServicioPedido, IPersona iPersona,
-                             IProducto iProducto,
+                             IServicioPedido iServicioPedido, IClienteRepository iClienteRepository,
+                             IProductoBaseRepository iProductoBase,
                              ProductoPedidoService productoPedidoService,
                              IPedidoRepositorio iPedidoRepositorio,
                              ServicioPedidoService servicioPedidoService,
                              PedidoService pedidoService) {
         this.iItemPedidoRepository = iItemPedidoRepository;
-        this.iPersona = iPersona;
-        this.iProducto = iProducto;
+        this.iClienteRepository = iClienteRepository;
+        this.iProductoBase = iProductoBase;
         this.productoPedidoService = productoPedidoService;
         this.servicioPedidoService = servicioPedidoService;
         this.pedidoService = pedidoService;
@@ -44,15 +45,22 @@ public class ItemPedidoService {
         return iItemPedidoRepository.findByTipo(tipo);
     }
 
-    public void guardarItemsPedidos(List<ItemPedidoDto> listaItems, Long idPersona){
-        Persona persona = iPersona.findById(idPersona).orElseThrow();
+    /*public void guardarItemsPedidos(List<ItemPedidoDto> listaItems, Long idCliente){
+        Cliente cliente = clienteService.traerCliente(idCliente);
+        Pedido pedido = pedidoService.agregarPedidoACliente(cliente);
 
-        Pedido pedido = pedidoService.agregarPedidoAPersona(idPersona);
+        if(cliente.getEmpresa() != null){
+            EmpresaCliente empresaCliente = cliente.getEmpresa();
+            pedido.setEmpresaCliente(empresaCliente);
+        }
+
 
         for(ItemPedidoDto item: listaItems){
-            long id = item.getId();
-            Producto producto = iProducto.findById(id).orElseThrow();
-            if (Objects.equals(producto.getTipo(), "servicio")){
+            //long id = item.getId();
+            String nombre = item.getNombre();
+            //ProductoBase productoBase = iProductoBase.findById(id).orElseThrow();
+            ProductoBase productoBase = iProductoBase.findBy(id).orElseThrow();
+            if (Objects.equals(productoBase.getTipo(), "servicio")){
                 System.out.println("es un servicio");
                 servicioPedidoService.agregarServicioPedido(item, pedido, id);
 
@@ -61,5 +69,5 @@ public class ItemPedidoService {
                 productoPedidoService.agregarProductoPedido(item, pedido, id);
             }
         }
-    }
+    }*/
 }

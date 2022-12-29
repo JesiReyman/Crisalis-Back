@@ -1,9 +1,11 @@
 package com.crisalis.crisalisback.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import com.crisalis.crisalisback.dto.ProductoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,11 +22,50 @@ public class ProductoService {
         this.iProducto = iProducto;
     }
 
-    public Producto agregarProducto(Producto producto){
+    public Producto agregarProducto(ProductoDTO productoDTO){
+        Producto producto = new Producto(productoDTO);
         return iProducto.save(producto);
     }
 
-    public List<Producto> listarProductos() {
-        return iProducto.findByTipo("producto");
+    public List<ProductoDTO> listarProductos() {
+        return iProducto.findAll().stream()
+                .map(Producto::productoAproductoDTO)
+                .collect(Collectors.toList());
+    }
+
+    public Producto traerProducto(Long idProducto){
+        return iProducto.findById(idProducto).orElseThrow();
+    }
+
+    public ProductoDTO traerProductoDTOByNombre(String nombreProducto){
+        return iProducto.findByNombre(nombreProducto).productoAproductoDTO();
+    }
+
+    public Producto traerProductoByNombre(String nombreProducto){
+        return iProducto.findByNombre(nombreProducto);
+    }
+
+    public void restarStock(Producto producto, int cantidad){
+        int stock = producto.getStock();
+        stock -= cantidad;
+        producto.setStock(stock);
+        iProducto.save(producto);
+    }
+
+    public void eliminarProducto(Long idProducto){
+        iProducto.deleteById(idProducto);
+    }
+
+    public void eliminarProductoPorNombre(String nombreProducto){
+        iProducto.deleteByNombre(nombreProducto);
+    }
+
+    public ProductoDTO editarProducto(String nombreProducto, ProductoDTO productoDTO){
+        Producto productoAEditar = traerProductoByNombre(nombreProducto);
+        productoAEditar.setNombre(productoDTO.getNombre());
+        productoAEditar.setDescripcion(productoDTO.getDescripcion());
+        productoAEditar.setPrecioBase(productoDTO.getPrecioBase());
+        productoAEditar.setStock(productoDTO.getStock());
+        return iProducto.save(productoAEditar).productoAproductoDTO();
     }
 }

@@ -65,7 +65,7 @@ public class AuthController {
         if (usuarioLoginService.existByEmail(nuevoUsuario.getEmail()))
             return new ResponseEntity<Mensaje>(new Mensaje("Ese email ya está registrado"), HttpStatus.BAD_REQUEST);
         
-        UsuarioLogin usuario = new UsuarioLogin(nuevoUsuario.getNombre(), 
+        UsuarioLogin usuario = new UsuarioLogin(nuevoUsuario.getNombre(), nuevoUsuario.getApellido(),
                 nuevoUsuario.getNombreUsuario(), 
                 nuevoUsuario.getEmail(),
                 passwordEncoder.encode(nuevoUsuario.getPassword()));
