@@ -22,8 +22,8 @@ public class ProductoController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/nuevo")
-    public ResponseEntity<Producto> agregarProducto(@RequestBody ProductoDTO productoDTO) {
-        Producto nuevoProducto = productoService.agregarProducto(productoDTO);
+    public ResponseEntity<ProductoDTO> agregarProducto(@RequestBody ProductoDTO productoDTO) {
+        ProductoDTO nuevoProducto = productoService.agregarProducto(productoDTO);
         return new ResponseEntity<>(nuevoProducto, HttpStatus.OK);
     }
 
@@ -49,12 +49,12 @@ public class ProductoController {
     public void eliminarProducto(@PathVariable("idProducto") Long idProducto){
         productoService.eliminarProducto(idProducto);
     }*/
-
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("eliminar/{nombreProducto}")
     public void eliminarProducto(@PathVariable("nombreProducto") String nombreProducto){
         productoService.eliminarProductoPorNombre(nombreProducto);
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("editar/{nombreProducto}")
     public ResponseEntity<ProductoDTO> editarProducto(@PathVariable("nombreProducto") String nombreProducto, @RequestBody ProductoDTO productoDTO){
         ProductoDTO productoEditado = productoService.editarProducto(nombreProducto, productoDTO);

@@ -36,9 +36,9 @@ public class Pedido {
     @JsonIgnore
     private Cliente cliente;
 
-    @ManyToOne
+    /*@ManyToOne
     @JsonIgnore
-    private EmpresaCliente empresaCliente;
+    private EmpresaCliente empresaCliente;*/
 
     public Pedido(Cliente cliente) {
         this.fechaCreacion = new Date();
@@ -46,9 +46,9 @@ public class Pedido {
         this.cliente = cliente;
     }
 
-    public Pedido(EmpresaCliente empresa) {
+    /*public Pedido(EmpresaCliente empresa) {
         this.fechaCreacion = new Date();
         this.estado = "Pendiente";
         this.empresaCliente = empresa;
-    }
+    }*/
 }

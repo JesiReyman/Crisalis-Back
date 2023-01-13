@@ -9,8 +9,6 @@ import java.util.List;
 
 
 @Getter @Setter
-//@RequiredArgsConstructor
-//@AllArgsConstructor
 @NoArgsConstructor(force = true)
 @Entity
 @Table(name="inventario")

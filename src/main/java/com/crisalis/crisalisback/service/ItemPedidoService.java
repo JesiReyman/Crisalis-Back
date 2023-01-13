@@ -1,6 +1,5 @@
 package com.crisalis.crisalisback.service;
 
-import com.crisalis.crisalisback.dto.ItemPedidoDto;
 import com.crisalis.crisalisback.model.*;
 import com.crisalis.crisalisback.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,30 +7,29 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @Transactional
 public class ItemPedidoService {
     private final IItemPedidoRepository iItemPedidoRepository;
-    private IClienteRepository iClienteRepository;
+    private IPersonaClienteRepository iPersonaClienteRepository;
     private IProductoBaseRepository iProductoBase;
     private ProductoPedidoService productoPedidoService;
     private ServicioPedidoService servicioPedidoService;
     private PedidoService pedidoService;
-    private ClienteService clienteService;
+    private PersonaClienteService personaClienteService;
 
     @Autowired
     public ItemPedidoService(IItemPedidoRepository iItemPedidoRepository,
                              IProductoPedido iProductoPedido,
-                             IServicioPedido iServicioPedido, IClienteRepository iClienteRepository,
+                             IServicioPedido iServicioPedido, IPersonaClienteRepository iPersonaClienteRepository,
                              IProductoBaseRepository iProductoBase,
                              ProductoPedidoService productoPedidoService,
                              IPedidoRepositorio iPedidoRepositorio,
                              ServicioPedidoService servicioPedidoService,
                              PedidoService pedidoService) {
         this.iItemPedidoRepository = iItemPedidoRepository;
-        this.iClienteRepository = iClienteRepository;
+        this.iPersonaClienteRepository = iPersonaClienteRepository;
         this.iProductoBase = iProductoBase;
         this.productoPedidoService = productoPedidoService;
         this.servicioPedidoService = servicioPedidoService;

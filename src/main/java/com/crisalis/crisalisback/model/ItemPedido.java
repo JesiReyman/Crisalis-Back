@@ -19,6 +19,8 @@ public class ItemPedido {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    private double precioBase;
+    private double impuestoIVA;
     private double precioFinalUnitario;
 
     private int cantidad;
@@ -34,9 +36,11 @@ public class ItemPedido {
     @JsonIgnore
     private Pedido pedido;
 
-    public ItemPedido(double precioFinalUnitario, int cantidad, Pedido pedido) {
+    public ItemPedido(double precioBase, double impuestoIVA, double precioFinalUnitario, int cantidad, ProductoBase productoBase) {
+        this.precioBase = precioBase;
+        this.impuestoIVA = impuestoIVA;
         this.precioFinalUnitario = precioFinalUnitario;
         this.cantidad = cantidad;
-        this.pedido = pedido;
+        this.productoBase = productoBase;
     }
 }

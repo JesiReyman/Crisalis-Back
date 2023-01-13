@@ -1,7 +1,5 @@
 package com.crisalis.crisalisback.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.*;
@@ -10,36 +8,23 @@ import java.util.List;
 
 @Getter @Setter
 @NoArgsConstructor
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @DiscriminatorColumn(name="tipo",
         discriminatorType = DiscriminatorType.STRING)
-@DiscriminatorValue("personaFisica")
 @Entity
-public class Cliente extends Persona{
+public abstract class Cliente{
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false, unique = true)
     private Long id;
 
-    @NotNull
-    private long dni;
-
-    @JsonManagedReference
-    @OneToOne(mappedBy="cliente", cascade = {CascadeType.ALL}, orphanRemoval = true)
-    private EmpresaCliente empresa;
+    /*@Column(name = "tipo", insertable = false, updatable = false)
+    private String tipo;*/
 
     @Getter(value = AccessLevel.NONE)
     @Setter(value = AccessLevel.NONE)
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
     private List<Pedido> listaDePedidos = new ArrayList<Pedido>();
 
-    public Cliente(String nombre, String apellido, long dni) {
-        super(nombre, apellido);
-        this.dni = dni;
-    }
 
-    public void setEmpresaCliente(EmpresaCliente empresaCliente){
-        this.empresa = empresaCliente;
-        this.empresa.setCliente(this);
-    }
 }

@@ -22,9 +22,9 @@ public class ProductoService {
         this.iProducto = iProducto;
     }
 
-    public Producto agregarProducto(ProductoDTO productoDTO){
+    public ProductoDTO agregarProducto(ProductoDTO productoDTO){
         Producto producto = new Producto(productoDTO);
-        return iProducto.save(producto);
+        return iProducto.save(producto).productoAproductoDTO();
     }
 
     public List<ProductoDTO> listarProductos() {

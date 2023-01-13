@@ -1,8 +1,7 @@
 
 package com.crisalis.crisalisback.security.service;
 
-import com.crisalis.crisalisback.model.Persona;
-import com.crisalis.crisalisback.repository.IClienteRepository;
+import com.crisalis.crisalisback.repository.IPersonaClienteRepository;
 import com.crisalis.crisalisback.security.entity.UsuarioLogin;
 import com.crisalis.crisalisback.security.repository.UsuarioRepository;
 import java.util.Optional;
@@ -17,7 +16,7 @@ public class UsuarioLoginService {
     UsuarioRepository usuarioRepository;
     
     @Autowired
-    IClienteRepository iClienteRepository;
+    IPersonaClienteRepository iPersonaClienteRepository;
     
     public Optional<UsuarioLogin> getByNombreUsuario(String nombreUsuario){
         return usuarioRepository.findByNombreUsuario(nombreUsuario);

@@ -22,8 +22,8 @@ public class ProductoPedido extends ItemPedido{
     @JsonIgnore
     private Producto producto;*/
 
-    public ProductoPedido(double precioFinalUnitario, int cantidad, Pedido pedido, int aniosDeGarantia) {
-        super(precioFinalUnitario, cantidad, pedido);
+    public ProductoPedido(double precioBase, double impuestoIVA, double precioFinalUnitario, int cantidad, ProductoBase productoBase, int aniosDeGarantia) {
+        super(precioBase, impuestoIVA, precioFinalUnitario, cantidad, productoBase);
         this.aniosDeGarantia = aniosDeGarantia;
     }
 }

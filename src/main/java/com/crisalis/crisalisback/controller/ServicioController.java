@@ -21,7 +21,7 @@ public class ServicioController {
         this.servicioService = servicioService;
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/nuevo")
     public ResponseEntity<ServicioDTO> agregarServicio(@RequestBody ServicioDTO servicio) {
         ServicioDTO nuevoServicio = servicioService.agregarServicio(servicio);

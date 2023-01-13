@@ -1,7 +1,6 @@
 package com.crisalis.crisalisback.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -14,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Transactional
 public class PedidoService {
     private final IPedidoRepositorio iPedido;
-    private final IClienteRepository iClienteRepository;
+    private final IPersonaClienteRepository iPersonaClienteRepository;
     private final IServicioPedido iServicioPedido;
 
     private final IProductoPedido iProductoPedido;
@@ -23,11 +22,11 @@ public class PedidoService {
 
     @Autowired
     public PedidoService(IPedidoRepositorio iPedido,
-                         IClienteRepository iClienteRepository,
+                         IPersonaClienteRepository iPersonaClienteRepository,
                          IServicioPedido iServicioPedido,
                          IProductoPedido iProductoPedido) {
         this.iPedido = iPedido;
-        this.iClienteRepository = iClienteRepository;
+        this.iPersonaClienteRepository = iPersonaClienteRepository;
         this.iServicioPedido = iServicioPedido;
         this.iProductoPedido = iProductoPedido;
     }
@@ -38,13 +37,13 @@ public class PedidoService {
         return iPedido.save(pedido);
     }
 
-    public Pedido agregarPedidoACliente(EmpresaCliente empresaCliente, Pedido pedido){
+    /*public Pedido agregarPedidoACliente(EmpresaCliente empresaCliente, Pedido pedido){
         //Cliente cliente = iClienteRepository.findById(idCliente).orElseThrow();
         //EmpresaCliente empresaCliente = empresaClienteService.trearEmpresaCliente(idEmpresa);
         //Pedido pedido = new Pedido(cliente, empresaCliente);
         pedido.setEmpresaCliente(empresaCliente);
         return iPedido.save(pedido);
-    }
+    }*/
 
     public List<Pedido> listarPedidosPorClienteFechaAsc(Long idPersona) {
         return iPedido.findByClienteIdOrderByFechaCreacionAsc(idPersona);

@@ -23,8 +23,8 @@ public class ServicioPedido extends ItemPedido{
     @JsonIgnore
     private Servicio servicio;*/
 
-    public ServicioPedido(double precioFinalUnitario, int cantidad, Pedido pedido, boolean activo) {
-        super(precioFinalUnitario, cantidad, pedido);
+    public ServicioPedido(double precioBase, double impuestoIVA, double precioFinalUnitario, int cantidad, ProductoBase productoBase, boolean activo) {
+        super(precioBase, impuestoIVA, precioFinalUnitario, cantidad, productoBase);
         this.activo = activo;
     }
 }
