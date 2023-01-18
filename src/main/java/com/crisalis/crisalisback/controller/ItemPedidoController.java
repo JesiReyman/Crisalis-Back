@@ -24,10 +24,10 @@ public class ItemPedidoController {
         return new ResponseEntity<>(listaItems, HttpStatus.OK);
     }
 
-    /*@PostMapping("{idPersona}/{idEmpresa}/guardarLista")
-    public void guardarListaItems(@PathVariable("idPersona") Long idPersona, @RequestBody List<ItemPedidoDto> listaItems){
-        this.itemPedidoService.guardarItemsPedidos(listaItems, idPersona);
-    }*/
+    @PostMapping("{idCliente}/guardarLista")
+    public void guardarListaItems(@PathVariable("idCliente") int idCliente, @RequestBody List<ItemPedidoDto> listaItems){
+        this.itemPedidoService.guardarItemsPedidos(listaItems, idCliente);
+    }
 
     @GetMapping("lista/{tipo}")
     public List<ItemPedido> listarPorTipo(@PathVariable("tipo") String tipo){

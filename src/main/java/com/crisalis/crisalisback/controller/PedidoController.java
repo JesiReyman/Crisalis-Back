@@ -22,12 +22,13 @@ public class PedidoController {
         this.iPedidoRepositorio = iPedidoRepositorio;
     }
 
-    /*@PreAuthorize("hasRole('ADMIN')")
+    /*@PreAuthorize("hasRole('ADMIN')")*/
     @PostMapping("/{idPersona}/nuevo")
     public ResponseEntity<Pedido> agregarPedido(@PathVariable("idPersona") Long idPersona) {
-        Pedido nuevoPedido = pedidoService.agregarPedidoAPersona(idPersona);
+
+        Pedido nuevoPedido = pedidoService.agregarPedidoACliente(idPersona);
         return new ResponseEntity<>(nuevoPedido, HttpStatus.OK);
-    }*/
+    }
 
     @GetMapping("/{idPersona}/lista")
     public ResponseEntity<List<Pedido>> listarPedidosDePersona(@PathVariable("idPersona") Long idPersona) {

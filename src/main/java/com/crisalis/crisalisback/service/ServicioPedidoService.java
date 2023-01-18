@@ -29,9 +29,9 @@ public class ServicioPedidoService {
         this.iServicio = iServicio;
     }
 
-    public ServicioPedido agregarServicioPedido(ItemPedidoDto itemPedidoDto, Pedido pedido, Long id){
+    public ServicioPedido agregarServicioPedido(ItemPedidoDto itemPedidoDto, Pedido pedido, String nombre){
         ServicioPedido servicioPedido = new ServicioPedido();
-        Servicio servicio = iServicio.findById(id).orElseThrow();
+        Servicio servicio = iServicio.findByNombre(nombre);
         servicioPedido.setPedido(pedido);
         servicioPedido.setProductoBase(servicio);
         servicioPedido.setCantidad(itemPedidoDto.getCantidad());

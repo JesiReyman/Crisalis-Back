@@ -25,24 +25,28 @@ public class ProductoPedidoService {
 
 
     @Autowired
-    public ProductoPedidoService(IProductoPedido iProductoPedido, IPedidoRepositorio iPedido, IProducto iProducto) {
+    public ProductoPedidoService(IProductoPedido iProductoPedido, IPedidoRepositorio iPedido, IProducto iProducto, ProductoService productoService) {
         this.iProductoPedido = iProductoPedido;
         this.iPedido = iPedido;
         this.iProducto = iProducto;
+        this.productoService = productoService;
     }
 
-    public ProductoPedido agregarProductoPedido(ItemPedidoDto itemPedidoDto, Pedido pedido, Long idProducto){
+    public ProductoPedido agregarProductoPedido(ItemPedidoDto itemPedidoDto, Pedido pedido, String nombre){
         //Producto producto = iProducto.findById(idProducto).orElseThrow();
-        Producto producto = productoService.traerProducto(idProducto);
+        Producto producto = productoService.traerProductoByNombre(nombre);
         ProductoPedido productoPedido = new ProductoPedido();
         productoPedido.setProductoBase(producto);
-        productoPedido.setPedido(pedido);
+        //productoPedido.setPedido(pedido);
         int aniosGarantia = itemPedidoDto.getAniosDeGarantia();
         productoPedido.setAniosDeGarantia(aniosGarantia);
         int cantidad = itemPedidoDto.getCantidad();
         productoPedido.setCantidad(cantidad);
         productoService.restarStock(producto, cantidad);
+        productoPedido.setPrecioBase(itemPedidoDto.getPrecioBase());
+        pedido.addItemPedido(productoPedido);
 
+        iPedido.save(pedido);
 
         double precioBase = producto.getPrecioBase();
 

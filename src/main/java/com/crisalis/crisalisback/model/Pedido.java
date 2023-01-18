@@ -5,17 +5,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
 
 @Data
 @NoArgsConstructor
@@ -28,12 +24,14 @@ public class Pedido {
     private Date fechaCreacion;
 
     private String estado;
-     
+
+
     @OneToMany(mappedBy = "pedido", orphanRemoval = true)
     private List<ItemPedido> listaDeItems = new ArrayList<ItemPedido>();
 
     @ManyToOne
     @JsonIgnore
+    //@Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     private Cliente cliente;
 
     /*@ManyToOne
@@ -51,4 +49,9 @@ public class Pedido {
         this.estado = "Pendiente";
         this.empresaCliente = empresa;
     }*/
+
+    public void addItemPedido(ItemPedido itemPedido){
+        listaDeItems.add(itemPedido);
+        itemPedido.setPedido(this);
+    }
 }

@@ -11,4 +11,9 @@ public class ItemPedidoDto {
     private int cantidad;
     private int aniosDeGarantia;
     private String nombre;
+
+    private double precioBase;
+
+    private double precioFinal;
+
 }

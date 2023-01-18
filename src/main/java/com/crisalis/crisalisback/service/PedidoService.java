@@ -18,22 +18,30 @@ public class PedidoService {
 
     private final IProductoPedido iProductoPedido;
     private EmpresaClienteService empresaClienteService;
+    private PersonaClienteService personaClienteService;
+
 
 
     @Autowired
     public PedidoService(IPedidoRepositorio iPedido,
                          IPersonaClienteRepository iPersonaClienteRepository,
                          IServicioPedido iServicioPedido,
-                         IProductoPedido iProductoPedido) {
+                         IProductoPedido iProductoPedido,
+                         PersonaClienteService personaClienteService) {
         this.iPedido = iPedido;
         this.iPersonaClienteRepository = iPersonaClienteRepository;
         this.iServicioPedido = iServicioPedido;
         this.iProductoPedido = iProductoPedido;
+        this.personaClienteService = personaClienteService;
     }
 
-    public Pedido agregarPedidoACliente(Cliente cliente){
-        //Cliente cliente = iClienteRepository.findById(idCliente).orElseThrow();
+    public Pedido agregarPedidoACliente(Long  idCliente){
+        Cliente cliente = iPersonaClienteRepository.findById(idCliente).orElseThrow();
+        //PersonaCliente cliente = iPersonaClienteRepository.findByDni(idCliente);
+
         Pedido pedido = new Pedido(cliente);
+
+        //cliente.addPedido(pedido);
         return iPedido.save(pedido);
     }
 

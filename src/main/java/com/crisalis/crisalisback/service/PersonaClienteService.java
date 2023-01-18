@@ -48,6 +48,10 @@ public class PersonaClienteService {
         return new PersonaClienteDTO(personaCliente);
     }
 
+    public PersonaCliente buscarPorDNI(int dni){
+        return iPersonaClienteRepository.findByDni(dni);
+    }
+
     public PersonaClienteDTO editarCliente(int dniCliente, PersonaClienteDTO personaClienteDTO){
         PersonaCliente cliente = iPersonaClienteRepository.findByDni(dniCliente);
         cliente.setNombre(personaClienteDTO.getNombre());

@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface IProductoBaseRepository extends JpaRepository<ProductoBase, Long> {
     List<ProductoBase> findByTipo(String tipo);
+
+    ProductoBase findByNombre(String nombre);
 }

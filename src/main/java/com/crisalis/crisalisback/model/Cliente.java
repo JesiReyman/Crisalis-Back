@@ -26,5 +26,8 @@ public abstract class Cliente{
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
     private List<Pedido> listaDePedidos = new ArrayList<Pedido>();
 
-
+    public void addPedido(Pedido pedido){
+        listaDePedidos.add(pedido);
+        pedido.setCliente(this);
+    }
 }

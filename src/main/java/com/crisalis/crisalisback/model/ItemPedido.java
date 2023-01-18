@@ -21,6 +21,7 @@ public class ItemPedido {
 
     private double precioBase;
     private double impuestoIVA;
+
     private double precioFinalUnitario;
 
     private int cantidad;
