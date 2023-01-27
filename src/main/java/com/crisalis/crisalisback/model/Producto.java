@@ -6,18 +6,20 @@ import javax.persistence.Entity;
 import com.crisalis.crisalisback.dto.ProductoDTO;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Getter @Setter
 @NoArgsConstructor
 @Entity
 @DiscriminatorValue("producto")
 public class Producto extends ProductoBase{
     private int stock;
-    public Producto(String tipo, String nombre, String descripcion, double precioBase, int stock) {
+    public Producto(String tipo, String nombre, String descripcion, BigDecimal precioBase, int stock) {
         super(tipo, nombre, descripcion, precioBase);
         this.stock = stock;
     }
 
-    public Producto(String nombre, String descripcion, double precioBase, int stock) {
+    public Producto(String nombre, String descripcion, BigDecimal precioBase, int stock) {
         super(nombre, descripcion, precioBase);
         this.stock = stock;
     }

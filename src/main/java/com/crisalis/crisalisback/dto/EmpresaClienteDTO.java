@@ -13,12 +13,12 @@ import java.time.LocalDate;
 public class EmpresaClienteDTO {
     private String razonSocial;
     private LocalDate fechaInicio;
-    private long cuit;
+    private long dniOCuit;
 
     public EmpresaClienteDTO(EmpresaCliente empresaCliente) {
         this.razonSocial = empresaCliente.getRazonSocial();
         this.fechaInicio = empresaCliente.getFechaInicio();
-        this.cuit = empresaCliente.getCuit();
+        this.dniOCuit = empresaCliente.getDniOCuit();
 
     }
 
@@ -26,7 +26,7 @@ public class EmpresaClienteDTO {
         return EmpresaCliente.builder()
                 .razonSocial(empresaClienteDTO.razonSocial)
                 .fechaInicio(empresaClienteDTO.fechaInicio)
-                .cuit(empresaClienteDTO.cuit)
+                .dniOCuit(empresaClienteDTO.dniOCuit)
                 .build();
     }
 }

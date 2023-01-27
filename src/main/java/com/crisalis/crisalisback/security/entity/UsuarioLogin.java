@@ -16,10 +16,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name="USUARIO")
-public class UsuarioLogin extends Persona{
+public class UsuarioLogin{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String nombre;
+    private String apellido;
     @NotNull
     @Column(unique = true)
     private String nombreUsuario;
@@ -35,21 +37,20 @@ public class UsuarioLogin extends Persona{
     
     private Set<Rol> roles = new HashSet<>();
 
-    /*@JsonManagedReference
-    @OneToOne(mappedBy="usuario", cascade = {CascadeType.MERGE}, orphanRemoval = true)
-    private Persona persona;*/
-
-    public UsuarioLogin(String nombre, String apellido, String nombreUsuario, String email, String password) {
+    /*public UsuarioLogin(String nombre, String apellido, String nombreUsuario, String email, String password) {
         super(nombre, apellido);
         this.nombreUsuario = nombreUsuario;
         this.email = email;
         this.password = password;
         this.roles = roles;
-    }
-
-    /*public void addPersona(Persona persona) {
-        // perfil.add(perfil);
-        persona.setUsuario(this);
     }*/
 
+    public UsuarioLogin(String nombre, String apellido, String nombreUsuario, String email, String password) {
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.nombreUsuario = nombreUsuario;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+    }
 }

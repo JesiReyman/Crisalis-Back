@@ -33,7 +33,7 @@ public class PersonaClienteController {
     }*/
 
     @GetMapping("{dniCliente}")
-    public ResponseEntity<PersonaClienteDTO> buscarClientePorDni(@PathVariable("dniCliente") int dniCliente){
+    public ResponseEntity<PersonaClienteDTO> buscarClientePorDni(@PathVariable("dniCliente") Long dniCliente){
         PersonaClienteDTO cliente = personaClienteService.buscarClientePorDni(dniCliente);
         return new ResponseEntity<>(cliente, HttpStatus.OK);
     }
@@ -45,18 +45,18 @@ public class PersonaClienteController {
     }
 
     @PutMapping("editar/{dniCliente}")
-    public ResponseEntity<PersonaClienteDTO> editarCliente(@PathVariable("dniCliente") int dniCliente, @RequestBody PersonaClienteDTO personaClienteDTO){
+    public ResponseEntity<PersonaClienteDTO> editarCliente(@PathVariable("dniCliente") long dniCliente, @RequestBody PersonaClienteDTO personaClienteDTO){
         PersonaClienteDTO cliente = personaClienteService.editarCliente(dniCliente, personaClienteDTO);
         return new ResponseEntity<>(cliente, HttpStatus.OK);
     }
 
     @DeleteMapping("eliminar/{dniCliente}")
-    public void eliminarCliente(@PathVariable("dniCliente") int dniCliente){
+    public void eliminarCliente(@PathVariable("dniCliente") Long dniCliente){
         personaClienteService.eliminarCliente(dniCliente);
     }
 
     @PutMapping("{cuitEmpresa}/asociar/{dniCliente}")
-    public void asociarAEmpresa(@PathVariable("cuitEmpresa") Long cuitEmpresa, @PathVariable("dniCliente") int dniCliente){
+    public void asociarAEmpresa(@PathVariable("cuitEmpresa") Long cuitEmpresa, @PathVariable("dniCliente") long dniCliente){
         personaClienteService.asociarAEmpresa(cuitEmpresa, dniCliente);
     }
 }

@@ -1,5 +1,6 @@
 package com.crisalis.crisalisback.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -32,47 +33,41 @@ public class ProductoPedidoService {
         this.productoService = productoService;
     }
 
-    public ProductoPedido agregarProductoPedido(ItemPedidoDto itemPedidoDto, Pedido pedido, String nombre){
-        //Producto producto = iProducto.findById(idProducto).orElseThrow();
+    public ProductoPedido agregarProductoPedido(ItemPedidoDto itemPedidoDto, String nombre){
         Producto producto = productoService.traerProductoByNombre(nombre);
         ProductoPedido productoPedido = new ProductoPedido();
         productoPedido.setProductoBase(producto);
-        //productoPedido.setPedido(pedido);
         int aniosGarantia = itemPedidoDto.getAniosDeGarantia();
         productoPedido.setAniosDeGarantia(aniosGarantia);
         int cantidad = itemPedidoDto.getCantidad();
         productoPedido.setCantidad(cantidad);
         productoService.restarStock(producto, cantidad);
-        productoPedido.setPrecioBase(itemPedidoDto.getPrecioBase());
-        pedido.addItemPedido(productoPedido);
 
-        iPedido.save(pedido);
+        BigDecimal precioBase = producto.getPrecioBase();
+        productoPedido.setPrecioBase(precioBase);
 
-        double precioBase = producto.getPrecioBase();
-
-        double precioTotal = calculoPrecioTotal(precioBase, aniosGarantia);
-        productoPedido.setPrecioFinalUnitario(precioTotal);
+        //double precioTotal = calculoPrecioTotal(precioBase, aniosGarantia);
+        //productoPedido.setPrecioFinalUnitario(precioTotal);
         
         return iProductoPedido.save(productoPedido);
     }
 
 
-    public double calculoPrecioTotal(double precio, int aniosGarantia){
-        double impuestoIVA = Adicional.impuestoIVA(precio);
-        double garantia = Adicional.cargoGarantia(precio, aniosGarantia);
-        return precio + impuestoIVA + garantia;
+    public BigDecimal calculoPrecioTotal(BigDecimal precioBase, BigDecimal precioImpuestos, int aniosGarantia){
+        BigDecimal garantia = Adicional.cargoGarantia(precioBase, aniosGarantia);
+        return precioBase.add(precioImpuestos).add(garantia);
     }
 
     public void borrarProductoPedido(Long idProductoPedido){
         iProductoPedido.deleteById(idProductoPedido);
     }
 
-    public double calculoDescuento(Long idCliente, Long idProducto){
+    public BigDecimal calculoDescuento(Long idCliente, Long idProducto){
         Producto producto = iProducto.findById(idProducto).orElseThrow();
         ServicioPedido servicioActivo = pedidoService.servicioActivo(idCliente);
-        double descuento = 0;
+        BigDecimal descuento = BigDecimal.ZERO;
         if(servicioActivo.getPedido() != null){
-            double precioBase = producto.getPrecioBase();
+            BigDecimal precioBase = producto.getPrecioBase();
             descuento = Adicional.descuentoProducto(precioBase);
         }
         return descuento;

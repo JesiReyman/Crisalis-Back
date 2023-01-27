@@ -24,14 +24,20 @@ public class ItemPedidoController {
         return new ResponseEntity<>(listaItems, HttpStatus.OK);
     }
 
-    @PostMapping("{idCliente}/guardarLista")
+    /*@PostMapping("{idCliente}/guardarLista")
     public void guardarListaItems(@PathVariable("idCliente") int idCliente, @RequestBody List<ItemPedidoDto> listaItems){
         this.itemPedidoService.guardarItemsPedidos(listaItems, idCliente);
-    }
+    }*/
 
     @GetMapping("lista/{tipo}")
     public List<ItemPedido> listarPorTipo(@PathVariable("tipo") String tipo){
         List<ItemPedido> listaItems = itemPedidoService.buscarPorTipo(tipo);
         return listaItems;
+    }
+
+    @PostMapping("estimarItem")
+    public ResponseEntity<ItemPedidoDto> estimarItemPedido(@RequestBody ItemPedidoDto itemPedidoDto){
+        ItemPedidoDto itemEstimado = itemPedidoService.calcularItem(itemPedidoDto);
+        return new ResponseEntity<>(itemEstimado, HttpStatus.OK);
     }
 }

@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Getter @Setter
 @NoArgsConstructor
 @Entity
@@ -19,10 +21,9 @@ public class ItemPedido {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    private double precioBase;
-    private double impuestoIVA;
-
-    private double precioFinalUnitario;
+    private BigDecimal precioBase;
+    private BigDecimal totalImpuestos;
+    private BigDecimal precioFinalUnitario;
 
     private int cantidad;
 
@@ -37,9 +38,9 @@ public class ItemPedido {
     @JsonIgnore
     private Pedido pedido;
 
-    public ItemPedido(double precioBase, double impuestoIVA, double precioFinalUnitario, int cantidad, ProductoBase productoBase) {
+    public ItemPedido(BigDecimal precioBase, BigDecimal totalImpuestos, BigDecimal precioFinalUnitario, int cantidad, ProductoBase productoBase) {
         this.precioBase = precioBase;
-        this.impuestoIVA = impuestoIVA;
+        this.totalImpuestos = totalImpuestos;
         this.precioFinalUnitario = precioFinalUnitario;
         this.cantidad = cantidad;
         this.productoBase = productoBase;

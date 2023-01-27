@@ -2,6 +2,7 @@ package com.crisalis.crisalisback.controller;
 
 import java.util.List;
 
+import com.crisalis.crisalisback.dto.ItemPedidoDto;
 import com.crisalis.crisalisback.repository.IPedidoRepositorio;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import com.crisalis.crisalisback.model.Pedido;
 import com.crisalis.crisalisback.service.PedidoService;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/pedido")
@@ -22,11 +25,23 @@ public class PedidoController {
         this.iPedidoRepositorio = iPedidoRepositorio;
     }
 
+    @GetMapping("lista")
+    public ResponseEntity<List<Pedido>> listarPedidos(){
+        List<Pedido> listaPedidos = pedidoService.listarPedidos();
+        return new ResponseEntity<>(listaPedidos, HttpStatus.OK);
+    }
+
     /*@PreAuthorize("hasRole('ADMIN')")*/
-    @PostMapping("/{idPersona}/nuevo")
+    /*@PostMapping("/{idPersona}/nuevo")
     public ResponseEntity<Pedido> agregarPedido(@PathVariable("idPersona") Long idPersona) {
 
         Pedido nuevoPedido = pedidoService.agregarPedidoACliente(idPersona);
+        return new ResponseEntity<>(nuevoPedido, HttpStatus.OK);
+    }*/
+
+    @PostMapping("/{dniOCuitCliente}/nuevo")
+    public ResponseEntity<Pedido> crearPedido(@PathVariable("dniOCuitCliente") long dniOCuitCliente, @Valid @RequestBody List<ItemPedidoDto> listaItems){
+        Pedido nuevoPedido = pedidoService.crearPedido(dniOCuitCliente, listaItems);
         return new ResponseEntity<>(nuevoPedido, HttpStatus.OK);
     }
 
@@ -46,4 +61,10 @@ public class PedidoController {
     public void eliminarPedido(@PathVariable("idPedido") Long idPedido){
         pedidoService.eliminarPedido(idPedido);
     }
+
+    /*@GetMapping("estimar")
+    public ResponseEntity<Pedido> estimarPedido(@RequestBody List<ItemPedidoDto> listaItems){
+        Pedido pedidoEstimado = pedidoService.simularPedido(listaItems);
+        return new ResponseEntity<>(pedidoEstimado, HttpStatus.OK);
+    }*/
 }

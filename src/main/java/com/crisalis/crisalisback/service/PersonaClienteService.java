@@ -43,31 +43,31 @@ public class PersonaClienteService {
         return iPersonaClienteRepository.findById(idCliente).orElseThrow();
     }
 
-    public PersonaClienteDTO buscarClientePorDni(int dni){
-        PersonaCliente personaCliente = iPersonaClienteRepository.findByDni(dni);
+    public PersonaClienteDTO buscarClientePorDni(long dni){
+        PersonaCliente personaCliente = iPersonaClienteRepository.findByDniOCuit(dni).orElseThrow();
         return new PersonaClienteDTO(personaCliente);
     }
 
-    public PersonaCliente buscarPorDNI(int dni){
-        return iPersonaClienteRepository.findByDni(dni);
+    public PersonaCliente buscarPorDNI(long dni){
+        return iPersonaClienteRepository.findByDniOCuit(dni).orElseThrow();
     }
 
-    public PersonaClienteDTO editarCliente(int dniCliente, PersonaClienteDTO personaClienteDTO){
-        PersonaCliente cliente = iPersonaClienteRepository.findByDni(dniCliente);
+    public PersonaClienteDTO editarCliente(long dniCliente, PersonaClienteDTO personaClienteDTO){
+        PersonaCliente cliente = iPersonaClienteRepository.findByDniOCuit(dniCliente).orElseThrow();
         cliente.setNombre(personaClienteDTO.getNombre());
         cliente.setApellido(personaClienteDTO.getApellido());
-        cliente.setDni(personaClienteDTO.getDni());
+        cliente.setDniOCuit(personaClienteDTO.getDniOCuit());
         iPersonaClienteRepository.save(cliente);
         return personaClienteDTO;
     }
 
-    public void eliminarCliente(int dniCLiente){
-        iPersonaClienteRepository.deleteByDni(dniCLiente);
+    public void eliminarCliente(long dniCLiente){
+        iPersonaClienteRepository.deleteByDniOCuit(dniCLiente);
     }
 
-    public void asociarAEmpresa(Long cuitEmpresa, int dniPersona){
-        PersonaCliente personaCliente = iPersonaClienteRepository.findByDni(dniPersona);
-        EmpresaCliente empresaCliente = iEmpresa.findByCuit(cuitEmpresa);
+    public void asociarAEmpresa(long cuitEmpresa, long dniPersona){
+        PersonaCliente personaCliente = iPersonaClienteRepository.findByDniOCuit(dniPersona).orElseThrow();
+        EmpresaCliente empresaCliente = iEmpresa.findByDniOCuit(cuitEmpresa).orElseThrow();
         personaCliente.setEmpresaCliente(empresaCliente);
         iPersonaClienteRepository.save(personaCliente);
     }

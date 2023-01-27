@@ -38,11 +38,12 @@ public class ProductoService {
     }
 
     public ProductoDTO traerProductoDTOByNombre(String nombreProducto){
-        return iProducto.findByNombre(nombreProducto).productoAproductoDTO();
+        Producto producto = iProducto.findByNombre(nombreProducto).orElseThrow();
+        return producto.productoAproductoDTO();
     }
 
     public Producto traerProductoByNombre(String nombreProducto){
-        return iProducto.findByNombre(nombreProducto);
+        return iProducto.findByNombre(nombreProducto).orElseThrow();
     }
 
     public void restarStock(Producto producto, int cantidad){

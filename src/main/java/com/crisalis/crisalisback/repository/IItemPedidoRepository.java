@@ -11,6 +11,4 @@ import java.util.List;
 @Repository
 public interface IItemPedidoRepository extends JpaRepository<ItemPedido, Long> {
     List<ItemPedido> findByTipo(String tipo);
-
-    //void agregarListaItems(List<ItemPedidoDto> listaItemsDto);
 }

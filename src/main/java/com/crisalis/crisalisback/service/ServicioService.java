@@ -39,7 +39,7 @@ public class ServicioService {
     }
 
     public ServicioDTO editarServicio(String nombre, ServicioDTO servicioDTO){
-        Servicio servicioAEditar = iServicio.findByNombre(nombre);
+        Servicio servicioAEditar = iServicio.findByNombre(nombre).orElseThrow();
         servicioAEditar.setNombre(servicioDTO.getNombre());
         servicioAEditar.setDescripcion(servicioDTO.getDescripcion());
         servicioAEditar.setPrecioBase(servicioDTO.getPrecioBase());
@@ -48,6 +48,7 @@ public class ServicioService {
     }
 
     public ServicioDTO buscarServicio(String nombreServicio){
-        return iServicio.findByNombre(nombreServicio).servicioAservicioDTO();
+        Servicio servicio = iServicio.findByNombre(nombreServicio).orElseThrow();
+        return servicio.servicioAservicioDTO();
     }
 }

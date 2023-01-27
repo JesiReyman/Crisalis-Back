@@ -9,5 +9,5 @@ import com.crisalis.crisalisback.model.ServicioPedido;
 
 @Repository
 public interface IServicioPedido extends JpaRepository<ServicioPedido, Long>{
-    public List<ServicioPedido> findByPedidoId(Long idPedido);
+    List<ServicioPedido> findByPedidoId(Long idPedido);
 }

@@ -1,9 +1,13 @@
 package com.crisalis.crisalisback.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.transaction.Transactional;
 
+import com.crisalis.crisalisback.Exception.ApiExceptionHandler;
+import com.crisalis.crisalisback.dto.ItemPedidoDto;
+import com.crisalis.crisalisback.dto.PedidoDTO;
 import com.crisalis.crisalisback.model.*;
 import com.crisalis.crisalisback.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +23,8 @@ public class PedidoService {
     private final IProductoPedido iProductoPedido;
     private EmpresaClienteService empresaClienteService;
     private PersonaClienteService personaClienteService;
+    private ClienteService clienteService;
+    private ItemPedidoService itemPedidoService;
 
 
 
@@ -27,31 +33,50 @@ public class PedidoService {
                          IPersonaClienteRepository iPersonaClienteRepository,
                          IServicioPedido iServicioPedido,
                          IProductoPedido iProductoPedido,
-                         PersonaClienteService personaClienteService) {
+                         PersonaClienteService personaClienteService,
+                         ClienteService clienteService,
+                         ItemPedidoService itemPedidoService) {
         this.iPedido = iPedido;
         this.iPersonaClienteRepository = iPersonaClienteRepository;
         this.iServicioPedido = iServicioPedido;
         this.iProductoPedido = iProductoPedido;
         this.personaClienteService = personaClienteService;
+        this.clienteService = clienteService;
+        this.itemPedidoService = itemPedidoService;
     }
 
-    public Pedido agregarPedidoACliente(Long  idCliente){
-        Cliente cliente = iPersonaClienteRepository.findById(idCliente).orElseThrow();
-        //PersonaCliente cliente = iPersonaClienteRepository.findByDni(idCliente);
 
+    public Pedido crearPedido(long dniOCuitCLiente, List<ItemPedidoDto> listaItemsPedidos){
+        Cliente cliente = clienteService.encontrarCliente(dniOCuitCLiente);
         Pedido pedido = new Pedido(cliente);
-
-        //cliente.addPedido(pedido);
+        List<ItemPedido> listaItems = itemPedidoService.setearItemPedido(listaItemsPedidos, pedido);
+        pedido.setListaDeItems(listaItems);
         return iPedido.save(pedido);
+
     }
 
-    /*public Pedido agregarPedidoACliente(EmpresaCliente empresaCliente, Pedido pedido){
-        //Cliente cliente = iClienteRepository.findById(idCliente).orElseThrow();
-        //EmpresaCliente empresaCliente = empresaClienteService.trearEmpresaCliente(idEmpresa);
-        //Pedido pedido = new Pedido(cliente, empresaCliente);
-        pedido.setEmpresaCliente(empresaCliente);
-        return iPedido.save(pedido);
-    }*/
+    public PedidoDTO simularPedido(List<ItemPedidoDto> listaItemsPedidos){
+        PedidoDTO pedido = new PedidoDTO();
+        BigDecimal totalPrecioBase = BigDecimal.ZERO;
+        BigDecimal totalPrecio = BigDecimal.ZERO;
+        BigDecimal totalImpuestos = BigDecimal.ZERO;
+        for (ItemPedidoDto itemPedido:
+             listaItemsPedidos) {
+            BigDecimal totalPrecioBaseItem = itemPedido.getPrecioBase();
+
+            totalPrecioBase = totalPrecioBase.add(itemPedido.getPrecioBase());
+            totalImpuestos = totalImpuestos.add(itemPedido.getTotalImpuestos().multiply(new BigDecimal(itemPedido.getCantidad())));
+            totalPrecio = totalPrecio.add(itemPedido.getPrecioFinalUnitario().multiply(new BigDecimal(itemPedido.getCantidad())));
+        }
+        pedido.setPrecioBase(totalPrecioBase);
+        pedido.setTotalImpuestos(totalImpuestos);
+        pedido.setTotal(totalPrecio);
+        return pedido;
+    }
+
+    public List<Pedido> listarPedidos(){
+        return iPedido.findAll();
+    }
 
     public List<Pedido> listarPedidosPorClienteFechaAsc(Long idPersona) {
         return iPedido.findByClienteIdOrderByFechaCreacionAsc(idPersona);
@@ -68,14 +93,14 @@ public class PedidoService {
     }
 
 
-    public double calculoDescuento(Long idPedido){
+    public BigDecimal calculoDescuento(Long idPedido){
 
         List<ProductoPedido> listaProductosPedidos = iProductoPedido.findByPedidoId(idPedido);
-        double descuento = 0;
+        BigDecimal descuento = BigDecimal.ZERO;
         for (ProductoPedido productoPedido : listaProductosPedidos){
             ProductoBase producto = productoPedido.getProductoBase();
-            double precio = producto.getPrecioBase();
-            descuento += Adicional.descuentoProducto(precio);
+            BigDecimal precio = producto.getPrecioBase();
+            descuento = descuento.add(Adicional.descuentoProducto(precio));
         }
         return descuento;
     }
@@ -99,16 +124,16 @@ public class PedidoService {
         return servicioActivo;
     }
 
-    public double aceptarPedido(Long idPedido){
+    public BigDecimal aceptarPedido(Long idPedido){
         Pedido pedido = iPedido.findById(idPedido).orElseThrow();
         Cliente cliente = pedido.getCliente();
         List<ItemPedido> items = pedido.getListaDeItems();
-        double precioTotal = 0;
+        BigDecimal precioTotal = BigDecimal.ZERO;
         for (ItemPedido item : items){
-            precioTotal += item.getPrecioFinalUnitario();
+            precioTotal = precioTotal.add(item.getPrecioFinalUnitario()) ;
         }
 
-        double descuentoCalculado = 0;
+        BigDecimal descuentoCalculado = BigDecimal.ZERO;
         ServicioPedido servicioActivo = servicioActivo(cliente.getId());
         if (servicioActivo.getPedido() != null ){
             descuentoCalculado = calculoDescuento(idPedido);
@@ -119,10 +144,12 @@ public class PedidoService {
 
         }
 
-        double precioFinalPedido = precioTotal - descuentoCalculado;
+        BigDecimal precioFinalPedido = precioTotal.subtract(descuentoCalculado);
 
         return precioFinalPedido;
     }
+
+
 
 
 }

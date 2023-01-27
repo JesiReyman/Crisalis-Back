@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+
 @RestController
 @RequestMapping("/pedirProducto")
 public class ProductoPedidoController {
@@ -31,7 +33,7 @@ public class ProductoPedidoController {
     }
 
     @GetMapping("{idCliente}/{idProducto}")
-    public double calcularDescuento(@PathVariable("idCliente") Long idCliente, @PathVariable("idProducto") Long idProducto){
+    public BigDecimal calcularDescuento(@PathVariable("idCliente") Long idCliente, @PathVariable("idProducto") Long idProducto){
         return productoPedidoService.calculoDescuento(idCliente, idProducto);
     }
 

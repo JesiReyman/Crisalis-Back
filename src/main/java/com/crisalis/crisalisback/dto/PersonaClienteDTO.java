@@ -12,19 +12,19 @@ import lombok.Data;
 public class PersonaClienteDTO {
     private String nombre;
     private String apellido;
-    private int dni;
+    private long dniOCuit;
 
     public PersonaClienteDTO(PersonaCliente personaCliente){
         this.nombre = personaCliente.getNombre();
         this.apellido = personaCliente.getApellido();
-        this.dni = personaCliente.getDni();
+        this.dniOCuit = personaCliente.getDniOCuit();
     }
 
     public static PersonaCliente dtoAPersonaCliente(PersonaClienteDTO personaClienteDTO){
         return PersonaCliente.builder()
                 .nombre(personaClienteDTO.nombre)
                 .apellido(personaClienteDTO.apellido)
-                .dni(personaClienteDTO.dni)
+                .dniOCuit(personaClienteDTO.dniOCuit)
                 .build();
     }
 }

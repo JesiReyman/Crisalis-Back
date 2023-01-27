@@ -34,7 +34,7 @@ public class EmpresaClienteService {
     }
 
     public EmpresaClienteDTO traerEmpresaCliente(Long cuit){
-        EmpresaCliente empresaCliente = iEmpresa.findByCuit(cuit);
+        EmpresaCliente empresaCliente = iEmpresa.findByDniOCuit(cuit).orElseThrow();
         return new EmpresaClienteDTO(empresaCliente);
     }
 
@@ -53,8 +53,8 @@ public class EmpresaClienteService {
     }
 
     public EmpresaClienteDTO editarEmpresa(Long cuitEmpresa, EmpresaClienteDTO empresaDTO){
-        EmpresaCliente empresaOriginal = iEmpresa.findByCuit(cuitEmpresa);
-        empresaOriginal.setCuit(empresaDTO.getCuit());
+        EmpresaCliente empresaOriginal = iEmpresa.findByDniOCuit(cuitEmpresa).orElseThrow();
+        empresaOriginal.setDniOCuit(empresaDTO.getDniOCuit());
         empresaOriginal.setRazonSocial(empresaDTO.getRazonSocial());
         empresaOriginal.setFechaInicio(empresaDTO.getFechaInicio());
         iEmpresa.save(empresaOriginal);
@@ -62,16 +62,16 @@ public class EmpresaClienteService {
     }
 
     public void eliminarEmpresa(Long cuitEmpresa){
-        EmpresaCliente empresaCliente = iEmpresa.findByCuit(cuitEmpresa);
+        EmpresaCliente empresaCliente = iEmpresa.findByDniOCuit(cuitEmpresa).orElseThrow();
         if(empresaCliente.getPersonaCliente() != null){
             PersonaCliente personaCliente = empresaCliente.getPersonaCliente();
             personaCliente.eliminarEmpresaCliente();
         }
-        iEmpresa.deleteByCuit(cuitEmpresa);
+        iEmpresa.deleteByDniOCuit(cuitEmpresa);
     }
 
     public PersonaClienteDTO mostrarPersonaAsociada(long cuitEmpresa){
-        EmpresaCliente empresa = iEmpresa.findByCuit(cuitEmpresa);
+        EmpresaCliente empresa = iEmpresa.findByDniOCuit(cuitEmpresa).orElseThrow();
         PersonaClienteDTO personaClienteDTO = null;
         if(empresa.getPersonaCliente() != null){
              personaClienteDTO = new PersonaClienteDTO(empresa.getPersonaCliente());

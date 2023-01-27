@@ -4,6 +4,7 @@ import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,21 +29,21 @@ public abstract class ProductoBase {
     @Column(unique = true)
     private String nombre;
     private String descripcion;
-    private double precioBase;
+    private BigDecimal precioBase;
 
     @Getter(value = AccessLevel.NONE)
     @Setter(value = AccessLevel.NONE)
     @OneToMany(mappedBy = "productoBase")
     private List<ItemPedido> listaDeItems = new ArrayList<ItemPedido>();
 
-    public ProductoBase(String tipo, String nombre, String descripcion, double precioBase) {
+    public ProductoBase(String tipo, String nombre, String descripcion, BigDecimal precioBase) {
         this.tipo = tipo;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precioBase = precioBase;
     }
 
-    public ProductoBase(String nombre, String descripcion, double precioBase) {
+    public ProductoBase(String nombre, String descripcion, BigDecimal precioBase) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precioBase = precioBase;

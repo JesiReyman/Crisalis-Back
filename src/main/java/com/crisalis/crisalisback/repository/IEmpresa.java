@@ -6,9 +6,11 @@ import org.springframework.stereotype.Repository;
 
 import com.crisalis.crisalisback.model.EmpresaCliente;
 
+import java.util.Optional;
+
 @Repository
 public interface IEmpresa extends JpaRepository<EmpresaCliente, Long>{
-    public EmpresaCliente findByCuit(long cuit);
+    Optional<EmpresaCliente>  findByDniOCuit(long cuit);
 
-    public void deleteByCuit(long cuit);
+    void deleteByDniOCuit(long cuit);
 }

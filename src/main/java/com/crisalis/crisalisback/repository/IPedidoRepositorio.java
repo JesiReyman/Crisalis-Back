@@ -12,4 +12,5 @@ public interface IPedidoRepositorio extends JpaRepository<Pedido, Long>{
     List<Pedido> findByClienteId(Long personaId);
 
     List<Pedido> findByClienteIdOrderByFechaCreacionAsc(Long personaId);
+
 }

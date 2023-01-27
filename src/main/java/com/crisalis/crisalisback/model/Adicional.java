@@ -1,28 +1,19 @@
 package com.crisalis.crisalisback.model;
 
 
+import java.math.BigDecimal;
+
 public class Adicional {
-    private static double IVA = 0.21;
-    private static double IIBB = 0.035;
-    private static double incrementoGarantia = 0.02;
-    private static double descuentoProducto = 0.1;
 
-    
-    public static double impuestoIVA(double precioBase){
-        
-        return IVA * precioBase;
+    private static BigDecimal incrementoGarantia = new BigDecimal("0.02");
+    private static BigDecimal descuentoProducto = new BigDecimal("0.1");
+
+    public static BigDecimal cargoGarantia(BigDecimal precio, int aniosGarantia){
+        return precio.multiply(new BigDecimal(aniosGarantia)).multiply(incrementoGarantia);
     }
 
-    public static double impuestoIIBB(Servicio servicio){
-        
-        return servicio.getPrecioBase() * IIBB;
-    }
+    public static BigDecimal descuentoProducto(BigDecimal precioProducto){
 
-    public static double cargoGarantia(double precio, int aniosGarantia){
-        return incrementoGarantia * precio * aniosGarantia;
-    }
-
-    public static double descuentoProducto(double precioProducto){
-         return precioProducto * descuentoProducto;
+        return precioProducto.multiply(descuentoProducto);
     }
 }
