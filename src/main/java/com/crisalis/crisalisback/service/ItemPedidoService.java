@@ -15,33 +15,27 @@ import java.util.List;
 @Transactional
 public class ItemPedidoService {
     private final IItemPedidoRepository iItemPedidoRepository;
-    private IPersonaClienteRepository iPersonaClienteRepository;
-    private IProductoBaseRepository iProductoBase;
     private ProductoPedidoService productoPedidoService;
     private ServicioPedidoService servicioPedidoService;
-    //private PedidoService pedidoService;
-    private PersonaClienteService personaClienteService;
-    //private final IPedidoRepositorio iPedidoRepositorio;
     private ProductoBaseService productoBaseService;
+    private ProductoService productoService;
     private ImpuestoService impuestoService;
 
     @Autowired
     public ItemPedidoService(IItemPedidoRepository iItemPedidoRepository,
-                             IProductoPedido iProductoPedido,
-                             IServicioPedido iServicioPedido, IPersonaClienteRepository iPersonaClienteRepository,
                              ProductoBaseService productoBaseService,
                              ProductoPedidoService productoPedidoService,
-                             IPedidoRepositorio iPedidoRepositorio,
                              ServicioPedidoService servicioPedidoService,
-                             PersonaClienteService personaClienteService,
-                             ImpuestoService impuestoService) {
+                             ImpuestoService impuestoService,
+                             ProductoService productoService) {
         this.iItemPedidoRepository = iItemPedidoRepository;
-        this.iPersonaClienteRepository = iPersonaClienteRepository;
+
         this.productoBaseService = productoBaseService;
         this.productoPedidoService = productoPedidoService;
         this.servicioPedidoService = servicioPedidoService;
-        this.personaClienteService = personaClienteService;
+
         this.impuestoService = impuestoService;
+        this.productoService = productoService;
     }
     public List<ItemPedido> listaItemsPedidos(){
         return iItemPedidoRepository.findAll();
@@ -58,6 +52,8 @@ public class ItemPedidoService {
         for(ItemPedidoDto item : listaItemsPedidos){
             String nombreProductoBase = item.getNombre();
             ProductoBase productoBase = productoBaseService.encontrarProductoBase(nombreProductoBase);
+            item = calcularItem(item);
+
             String tipo = productoBase.getTipo();
 
             if (tipo.equals("servicio")){
@@ -66,13 +62,11 @@ public class ItemPedidoService {
             } else {
                 System.out.println("es un producto");
                 itemPedido = ItemPedidoDto.dtoAProductoPedido(item);
-
+                productoPedidoService.actualizarStockProducto(nombreProductoBase, item.getCantidad());
             }
             itemPedido.setProductoBase(productoBase);
             itemPedido.setPedido(pedido);
             listaItems.add(itemPedido);
-
-
         }
         return listaItems;
     }
@@ -95,8 +89,8 @@ public class ItemPedidoService {
         if (tipo.equals("producto")){
             precioFinal = productoPedidoService.calculoPrecioTotal(precioBase, impuestoTotal, itemPedidoDto.getAniosDeGarantia());
 
-        } else if (tipo.equals("servicio")) {
 
+        } else if (tipo.equals("servicio")) {
             precioFinal = servicioPedidoService.calculoPrecioTotal(precioBase, impuestoTotal, itemPedidoDto.getNombre());
         }
 

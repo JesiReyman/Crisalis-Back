@@ -20,17 +20,28 @@ import java.util.stream.Collectors;
 public class PersonaClienteService {
     private final IPersonaClienteRepository iPersonaClienteRepository;
     private final IEmpresa iEmpresa;
+    private ClienteService clienteService;
 
     @Autowired
-    public PersonaClienteService(IPersonaClienteRepository iPersonaClienteRepository, IEmpresa iEmpresa) {
+    public PersonaClienteService(IPersonaClienteRepository iPersonaClienteRepository, IEmpresa iEmpresa, ClienteService clienteService) {
         this.iPersonaClienteRepository = iPersonaClienteRepository;
         this.iEmpresa = iEmpresa;
+        this.clienteService = clienteService;
     }
 
     public PersonaClienteDTO agregarCliente(PersonaClienteDTO personaClienteDTO){
         PersonaCliente personaCliente = PersonaClienteDTO.dtoAPersonaCliente(personaClienteDTO);
         iPersonaClienteRepository.save(personaCliente);
         return personaClienteDTO;
+    }
+
+    public PersonaCliente registrarPersona(PersonaClienteDTO personaClienteDTO){
+        PersonaCliente personaCliente = PersonaClienteDTO.dtoAPersonaCliente(personaClienteDTO);
+        return iPersonaClienteRepository.save(personaCliente);
+    }
+
+    public boolean existeDni(long dni){
+        return clienteService.existeDniOCuit(dni);
     }
 
     public List<PersonaClienteDTO> listaClientes(){

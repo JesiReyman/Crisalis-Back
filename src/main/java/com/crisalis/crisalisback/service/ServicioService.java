@@ -51,4 +51,10 @@ public class ServicioService {
         Servicio servicio = iServicio.findByNombre(nombreServicio).orElseThrow();
         return servicio.servicioAservicioDTO();
     }
+
+    public Servicio encontrarServicio(String nombre){
+        return iServicio.findByNombre(nombre).orElseThrow();
+    }
+
+
 }

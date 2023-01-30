@@ -10,4 +10,6 @@ import java.util.Optional;
 @Repository
 public interface IClienteRepository extends JpaRepository<Cliente, Long> {
     Optional<Cliente> findByDniOCuit(long cuit);
+
+    boolean existsByDniOCuit(long dniOCuit);
 }

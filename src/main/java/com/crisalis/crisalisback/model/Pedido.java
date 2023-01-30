@@ -38,11 +38,16 @@ public class Pedido {
     //@Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     private Cliente cliente;
 
-    @Builder
+
     public Pedido(Cliente cliente) {
         this.fechaCreacion = new Date();
         this.estado = EstadoDePedido.PENDIENTE;
         this.cliente = cliente;
+    }
+
+    @Builder
+    public Pedido( EstadoDePedido estado) {
+        this.estado = estado;
     }
 
     public void addItemPedido(ItemPedido itemPedido){

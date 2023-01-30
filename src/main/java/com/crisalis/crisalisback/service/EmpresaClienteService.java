@@ -38,6 +38,10 @@ public class EmpresaClienteService {
         return new EmpresaClienteDTO(empresaCliente);
     }
 
+    public EmpresaCliente encontrarEmpresa(long cuit){
+        return iEmpresa.findByDniOCuit(cuit).orElseThrow();
+    }
+
     public List<EmpresaClienteDTO> listaEmpresas(){
         return iEmpresa.findAll().stream()
                 .map(EmpresaClienteDTO::new)
@@ -45,10 +49,11 @@ public class EmpresaClienteService {
     }
 
     public EmpresaCliente editarClienteAsociado(Long idEmpresa, Long idCliente){
-        PersonaCliente personaCliente = iPersonaCliente.findById(idCliente).orElseThrow();
+        PersonaCliente personaCliente = personaClienteService.buscarPorDNI(idCliente);
         EmpresaCliente empresa = iEmpresa.findById(idEmpresa).orElseThrow();
-        personaCliente.setEmpresaCliente(empresa);
-        iPersonaCliente.save(personaCliente);
+        //personaCliente.setEmpresaCliente(empresa);
+        //iPersonaCliente.save(personaCliente);
+        empresa.setPersonaCliente(personaCliente);
         return empresa;
     }
 
@@ -68,6 +73,18 @@ public class EmpresaClienteService {
             personaCliente.eliminarEmpresaCliente();
         }
         iEmpresa.deleteByDniOCuit(cuitEmpresa);
+    }
+
+    public EmpresaCliente setPersonaAEmpresa(long cuitEmpresa, PersonaClienteDTO persona){
+        //PersonaCliente personaCliente = PersonaClienteDTO.dtoAPersonaCliente(personaClienteService.agregarCliente(persona));
+        PersonaCliente personaCliente = registrarPersona(persona);
+        EmpresaCliente empresaCliente = encontrarEmpresa(cuitEmpresa);
+        empresaCliente.setPersonaCliente(personaCliente);
+        return empresaCliente;
+    }
+
+    public PersonaCliente registrarPersona(PersonaClienteDTO persona){
+        return personaClienteService.registrarPersona(persona);
     }
 
     public PersonaClienteDTO mostrarPersonaAsociada(long cuitEmpresa){

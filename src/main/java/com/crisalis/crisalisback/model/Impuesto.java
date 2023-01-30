@@ -20,8 +20,8 @@ public class Impuesto {
     @NotNull
     @Enumerated(EnumType.STRING)
     private AplicaImpuesto aplica;
-    @Builder
 
+    @Builder
     public Impuesto(String nombre, BigDecimal porcentaje, AplicaImpuesto aplica) {
         this.nombre = nombre;
         this.porcentaje = porcentaje;

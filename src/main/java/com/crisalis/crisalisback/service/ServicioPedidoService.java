@@ -6,13 +6,10 @@ import com.crisalis.crisalisback.dto.ItemPedidoDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.crisalis.crisalisback.model.Adicional;
 import com.crisalis.crisalisback.model.Pedido;
-import com.crisalis.crisalisback.model.Producto;
 import com.crisalis.crisalisback.model.Servicio;
 import com.crisalis.crisalisback.model.ServicioPedido;
 import com.crisalis.crisalisback.repository.IPedidoRepositorio;
-import com.crisalis.crisalisback.repository.IServicio;
 import com.crisalis.crisalisback.repository.IServicioPedido;
 
 import java.math.BigDecimal;
@@ -21,17 +18,22 @@ import java.math.BigDecimal;
 @Transactional
 public class ServicioPedidoService {
     private IServicioPedido iServicioPedido;
-    private IPedidoRepositorio iPedido;
-    private IServicio iServicio;
+
+    private ServicioService servicioService;
 
     @Autowired
-    public ServicioPedidoService(IServicioPedido iServicioPedido, IPedidoRepositorio iPedido, IServicio iServicio) {
+    public ServicioPedidoService(IServicioPedido iServicioPedido, ServicioService servicioService) {
         this.iServicioPedido = iServicioPedido;
-        this.iPedido = iPedido;
-        this.iServicio = iServicio;
+        this.servicioService = servicioService;
     }
 
-    public ServicioPedido agregarServicioPedido(ItemPedidoDto itemPedidoDto, Pedido pedido, String nombre){
+    public Servicio buscarServicioAsociado(String nombreServicio){
+        return servicioService.encontrarServicio(nombreServicio);
+    }
+
+
+
+    /*public ServicioPedido agregarServicioPedido(ItemPedidoDto itemPedidoDto, Pedido pedido, String nombre){
         ServicioPedido servicioPedido = new ServicioPedido();
         Servicio servicio = iServicio.findByNombre(nombre).orElseThrow();
         servicioPedido.setPedido(pedido);
@@ -41,10 +43,10 @@ public class ServicioPedidoService {
         //System.out.println("El precio total mensual del servicio es de: " + precioTotal);
         //servicioPedido.setPrecioFinalUnitario(precioTotal);
         return iServicioPedido.save(servicioPedido);
-    }
+    }*/
     
     public BigDecimal calculoPrecioTotal(BigDecimal precioBase, BigDecimal totalImpuestos, String nombreServicio){
-        Servicio servicio = iServicio.findByNombre(nombreServicio).orElseThrow();
+        Servicio servicio = buscarServicioAsociado(nombreServicio);
         BigDecimal cargoSoporte = servicio.getPrecioSoporte();
         return precioBase.add(totalImpuestos).add(cargoSoporte);
     }
@@ -52,6 +54,13 @@ public class ServicioPedidoService {
     public void borrarServicioPedido(Long idServicioPedido){
 
         iServicioPedido.deleteById(idServicioPedido);
+    }
+
+    public ServicioPedido cambiarEstadoServicio(String nombreServicio, Long idPedido, boolean activo){
+        Servicio servicio = buscarServicioAsociado(nombreServicio);
+        ServicioPedido servicioPedido = iServicioPedido.findByProductoBaseIdAndPedidoId(servicio.getId(), idPedido).orElseThrow();
+        servicioPedido.setActivo(activo);
+        return iServicioPedido.save(servicioPedido);
     }
 
     

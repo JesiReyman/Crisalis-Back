@@ -25,7 +25,6 @@ public class ImpuestoDTO {
     }
 
     public static Impuesto dtoAImpuesto(ImpuestoDTO impuestoDTO){
-        //AplicaImpuesto aplica = AplicaImpuesto.forValue(impuestoDTO.aplica);
         return Impuesto.builder()
                 .nombre(impuestoDTO.nombre)
                 .porcentaje(impuestoDTO.porcentaje)

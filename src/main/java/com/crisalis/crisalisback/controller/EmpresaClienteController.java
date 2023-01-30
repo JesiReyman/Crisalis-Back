@@ -45,7 +45,7 @@ public class EmpresaClienteController {
         return new ResponseEntity<>(personaClienteDTO, HttpStatus.OK);
     }
 
-    @PutMapping("{idEmpresa}/{idCliente}")
+    @PutMapping("{idEmpresa}/asociar/{idCliente}")
     public ResponseEntity<EmpresaCliente> editarClienteAsociado(@PathVariable("idEmpresa") Long idEmpresa, @PathVariable("idCliente") Long idCliente){
         EmpresaCliente empresa = empresaClienteService.editarClienteAsociado(idEmpresa, idCliente);
         return new ResponseEntity<>(empresa, HttpStatus.OK);
@@ -60,5 +60,11 @@ public class EmpresaClienteController {
     @DeleteMapping("eliminar/{cuitEmpresa}")
     public void eliminarEmpresaCliente(@PathVariable("cuitEmpresa") Long cuitEmpresa){
         empresaClienteService.eliminarEmpresa(cuitEmpresa);
+    }
+
+    @PutMapping("{cuitEmpresa}/asociar")
+    public ResponseEntity<EmpresaCliente> asociarNuevaPersona(@PathVariable("cuitEmpresa") long cuitEmpresa, @RequestBody PersonaClienteDTO persona){
+        EmpresaCliente empresa = empresaClienteService.setPersonaAEmpresa(cuitEmpresa, persona);
+        return new ResponseEntity<>(empresa, HttpStatus.OK);
     }
 }

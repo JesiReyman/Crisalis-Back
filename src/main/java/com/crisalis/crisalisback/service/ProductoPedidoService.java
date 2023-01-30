@@ -19,16 +19,15 @@ import com.crisalis.crisalisback.repository.IServicioPedido;
 @Transactional
 public class ProductoPedidoService {
     private IProductoPedido iProductoPedido;
-    private IPedidoRepositorio iPedido;
+
     private IProducto iProducto;
     private PedidoService pedidoService;
     private ProductoService productoService;
 
 
     @Autowired
-    public ProductoPedidoService(IProductoPedido iProductoPedido, IPedidoRepositorio iPedido, IProducto iProducto, ProductoService productoService) {
+    public ProductoPedidoService(IProductoPedido iProductoPedido, IProducto iProducto, ProductoService productoService) {
         this.iProductoPedido = iProductoPedido;
-        this.iPedido = iPedido;
         this.iProducto = iProducto;
         this.productoService = productoService;
     }
@@ -62,7 +61,7 @@ public class ProductoPedidoService {
         iProductoPedido.deleteById(idProductoPedido);
     }
 
-    public BigDecimal calculoDescuento(Long idCliente, Long idProducto){
+    /*public BigDecimal calculoDescuento(Long idCliente, Long idProducto){
         Producto producto = iProducto.findById(idProducto).orElseThrow();
         ServicioPedido servicioActivo = pedidoService.servicioActivo(idCliente);
         BigDecimal descuento = BigDecimal.ZERO;
@@ -71,6 +70,15 @@ public class ProductoPedidoService {
             descuento = Adicional.descuentoProducto(precioBase);
         }
         return descuento;
+    }*/
+
+    public Producto buscarProductoAsociado(String nombreProducto){
+        return productoService.traerProductoByNombre(nombreProducto);
+    }
+
+    public void actualizarStockProducto(String nombreProducto, int cantidad){
+        Producto producto = buscarProductoAsociado(nombreProducto);
+        productoService.restarStock(producto, cantidad);
     }
 
 }

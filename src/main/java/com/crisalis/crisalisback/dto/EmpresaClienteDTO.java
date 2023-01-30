@@ -14,12 +14,15 @@ public class EmpresaClienteDTO {
     private String razonSocial;
     private LocalDate fechaInicio;
     private long dniOCuit;
+    private long dniPersona;
 
     public EmpresaClienteDTO(EmpresaCliente empresaCliente) {
         this.razonSocial = empresaCliente.getRazonSocial();
         this.fechaInicio = empresaCliente.getFechaInicio();
         this.dniOCuit = empresaCliente.getDniOCuit();
-
+        if (empresaCliente.getPersonaCliente() != null){
+            this.dniPersona = empresaCliente.getPersonaCliente().getDniOCuit();
+        }
     }
 
     public static EmpresaCliente dtoAEmpresaCliente(EmpresaClienteDTO empresaClienteDTO){

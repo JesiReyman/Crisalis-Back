@@ -81,8 +81,9 @@ public class ImpuestoService {
     }
 
     public BigDecimal calculoImpuesto(BigDecimal precioBase,BigDecimal porcentaje){
-
+        System.out.println("el calculo de impuesto da: " + precioBase.multiply(porcentaje));
         return precioBase.multiply(porcentaje);
+
     }
 
 

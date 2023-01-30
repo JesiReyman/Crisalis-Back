@@ -2,7 +2,10 @@ package com.crisalis.crisalisback.controller;
 
 import java.util.List;
 
+import com.crisalis.crisalisback.dto.EstadoDTO;
 import com.crisalis.crisalisback.dto.ItemPedidoDto;
+import com.crisalis.crisalisback.dto.PedidoDTO;
+import com.crisalis.crisalisback.enums.EstadoDePedido;
 import com.crisalis.crisalisback.repository.IPedidoRepositorio;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,27 +20,17 @@ import javax.validation.Valid;
 @RequestMapping("/pedido")
 public class PedidoController {
     private PedidoService pedidoService;
-    private final IPedidoRepositorio iPedidoRepositorio;
 
-    public PedidoController(PedidoService pedidoService,
-                            IPedidoRepositorio iPedidoRepositorio) {
+
+    public PedidoController(PedidoService pedidoService) {
         this.pedidoService = pedidoService;
-        this.iPedidoRepositorio = iPedidoRepositorio;
     }
 
     @GetMapping("lista")
-    public ResponseEntity<List<Pedido>> listarPedidos(){
-        List<Pedido> listaPedidos = pedidoService.listarPedidos();
+    public ResponseEntity<List<PedidoDTO>> listarPedidos(){
+        List<PedidoDTO> listaPedidos = pedidoService.listarPedidos();
         return new ResponseEntity<>(listaPedidos, HttpStatus.OK);
     }
-
-    /*@PreAuthorize("hasRole('ADMIN')")*/
-    /*@PostMapping("/{idPersona}/nuevo")
-    public ResponseEntity<Pedido> agregarPedido(@PathVariable("idPersona") Long idPersona) {
-
-        Pedido nuevoPedido = pedidoService.agregarPedidoACliente(idPersona);
-        return new ResponseEntity<>(nuevoPedido, HttpStatus.OK);
-    }*/
 
     @PostMapping("/{dniOCuitCliente}/nuevo")
     public ResponseEntity<Pedido> crearPedido(@PathVariable("dniOCuitCliente") long dniOCuitCliente, @Valid @RequestBody List<ItemPedidoDto> listaItems){
@@ -53,7 +46,7 @@ public class PedidoController {
 
     @GetMapping("/{idPedido}")
     public ResponseEntity<Pedido> detallePedido(@PathVariable("idPedido") Long idPedido){
-        Pedido pedido = pedidoService.detallePedido(idPedido);
+        Pedido pedido = pedidoService.encontrarPedido(idPedido);
         return new ResponseEntity<>(pedido, HttpStatus.OK);
     }
 
@@ -62,9 +55,8 @@ public class PedidoController {
         pedidoService.eliminarPedido(idPedido);
     }
 
-    /*@GetMapping("estimar")
-    public ResponseEntity<Pedido> estimarPedido(@RequestBody List<ItemPedidoDto> listaItems){
-        Pedido pedidoEstimado = pedidoService.simularPedido(listaItems);
-        return new ResponseEntity<>(pedidoEstimado, HttpStatus.OK);
-    }*/
+    @PutMapping("{idPedido}/cambiarEstado")
+    public void cambiarEstado(@PathVariable("idPedido") Long idPedido, @RequestBody EstadoDTO estadoDTO){
+        pedidoService.cambiarEstado(idPedido, estadoDTO);
+    }
 }

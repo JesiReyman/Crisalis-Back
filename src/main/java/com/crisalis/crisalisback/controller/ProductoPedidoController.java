@@ -32,9 +32,9 @@ public class ProductoPedidoController {
         productoPedidoService.borrarProductoPedido(idProductoPedido);
     }
 
-    @GetMapping("{idCliente}/{idProducto}")
+    /*@GetMapping("{idCliente}/{idProducto}")
     public BigDecimal calcularDescuento(@PathVariable("idCliente") Long idCliente, @PathVariable("idProducto") Long idProducto){
         return productoPedidoService.calculoDescuento(idCliente, idProducto);
-    }
+    }*/
 
 }

@@ -9,7 +9,7 @@ import com.crisalis.crisalisback.model.ServicioPedido;
 import com.crisalis.crisalisback.service.ServicioPedidoService;
 
 @RestController
-@RequestMapping("/pedirServicio")
+@RequestMapping("/servicioPedido")
 public class ServicioPedidoController {
     
     private ServicioPedidoService servicioPedidoService;
@@ -29,5 +29,12 @@ public class ServicioPedidoController {
     @DeleteMapping("/borrar/{idServicioPedido}")
     public void borrarServicioPedido(@PathVariable("idServicioPedido") Long idServicioPedido){
         servicioPedidoService.borrarServicioPedido(idServicioPedido);
+    }
+
+    @PutMapping("cambiarEstado/{nombreServicio}/{idPedido}")
+    public ResponseEntity<ServicioPedido>  cambiarEstadoServicio(@PathVariable("nombreServicio") String nombreServicio,
+                                                @PathVariable("idPedido") Long idPedido, @RequestBody boolean activo){
+        ServicioPedido servicioPedido = servicioPedidoService.cambiarEstadoServicio(nombreServicio, idPedido, activo);
+        return new ResponseEntity<>(servicioPedido, HttpStatus.OK);
     }
 }

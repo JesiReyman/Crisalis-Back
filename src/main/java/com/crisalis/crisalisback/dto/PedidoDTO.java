@@ -26,9 +26,19 @@ public class PedidoDTO {
     private BigDecimal totalImpuestos;
     private BigDecimal total;
 
-    public PedidoDTO(Pedido pedido){
+    public PedidoDTO(Pedido pedido, long dniOCuitCliente, BigDecimal precioBase, BigDecimal totalImpuestos, BigDecimal total){
         this.id = pedido.getId();
         this.fechaCreacion = pedido.getFechaCreacion();
         this.estado = pedido.getEstado();
+        this.dniOCuitCliente = dniOCuitCliente;
+        this.precioBase = precioBase;
+        this.totalImpuestos = totalImpuestos;
+        this.total = total;
+    }
+
+    public static Pedido dtoAPedido(PedidoDTO pedidoDTO){
+        return Pedido.builder()
+                .estado(pedidoDTO.estado)
+                .build();
     }
 }

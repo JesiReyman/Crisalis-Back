@@ -22,4 +22,8 @@ public class ClienteService {
     public Cliente encontrarCliente(long dniOCuit){
         return iClienteRepository.findByDniOCuit(dniOCuit).orElseThrow();
     }
+
+    public boolean existeDniOCuit(long dniOCuit){
+        return iClienteRepository.existsByDniOCuit(dniOCuit);
+    }
 }
