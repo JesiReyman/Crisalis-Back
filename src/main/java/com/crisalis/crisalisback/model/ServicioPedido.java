@@ -26,10 +26,11 @@ public class ServicioPedido extends ItemPedido{
     public ServicioPedido(BigDecimal precioBase,
                           BigDecimal totalImpuestos,
                           BigDecimal precioFinalUnitario,
+                          BigDecimal totalAdicionales,
                           int cantidad,
                           ProductoBase productoBase,
                           boolean activo) {
-        super(precioBase, totalImpuestos, precioFinalUnitario, cantidad, productoBase);
+        super(precioBase, totalImpuestos, precioFinalUnitario, cantidad, productoBase, totalAdicionales);
         this.activo = activo;
     }
 }

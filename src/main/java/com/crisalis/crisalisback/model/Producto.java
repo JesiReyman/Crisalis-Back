@@ -35,6 +35,7 @@ public class Producto extends ProductoBase{
                 .descripcion(this.getDescripcion())
                 .stock(this.stock)
                 .precioBase(this.getPrecioBase())
+                .tipo(this.getTipo())
                 .build();
     }
 

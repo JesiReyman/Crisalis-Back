@@ -23,13 +23,15 @@ public class ProductoPedidoService {
     private IProducto iProducto;
     private PedidoService pedidoService;
     private ProductoService productoService;
+    private AdicionalService adicionalService;
 
 
     @Autowired
-    public ProductoPedidoService(IProductoPedido iProductoPedido, IProducto iProducto, ProductoService productoService) {
+    public ProductoPedidoService(IProductoPedido iProductoPedido, IProducto iProducto, ProductoService productoService, AdicionalService adicionalService) {
         this.iProductoPedido = iProductoPedido;
         this.iProducto = iProducto;
         this.productoService = productoService;
+        this.adicionalService = this.adicionalService;
     }
 
     public ProductoPedido agregarProductoPedido(ItemPedidoDto itemPedidoDto, String nombre){
@@ -51,15 +53,15 @@ public class ProductoPedidoService {
         return iProductoPedido.save(productoPedido);
     }
 
+    public BigDecimal calculoPrecioTotal(BigDecimal precioBase, BigDecimal precioImpuestos, BigDecimal adicionalTotal){
 
-    public BigDecimal calculoPrecioTotal(BigDecimal precioBase, BigDecimal precioImpuestos, int aniosGarantia){
-        BigDecimal garantia = Adicional.cargoGarantia(precioBase, aniosGarantia);
-        return precioBase.add(precioImpuestos).add(garantia);
+        return precioBase.add(precioImpuestos).add(adicionalTotal);
     }
 
     public void borrarProductoPedido(Long idProductoPedido){
         iProductoPedido.deleteById(idProductoPedido);
     }
+
 
     /*public BigDecimal calculoDescuento(Long idCliente, Long idProducto){
         Producto producto = iProducto.findById(idProducto).orElseThrow();
@@ -79,6 +81,16 @@ public class ProductoPedidoService {
     public void actualizarStockProducto(String nombreProducto, int cantidad){
         Producto producto = buscarProductoAsociado(nombreProducto);
         productoService.restarStock(producto, cantidad);
+    }
+
+    public void restaurarStock(List <ItemPedido> listaProductosPedidos){
+        for (ItemPedido productoPedido : listaProductosPedidos
+             ) {
+            int cantidad = productoPedido.getCantidad();
+            String nombreProducto = productoPedido.getProductoBase().getNombre();
+            Producto producto = buscarProductoAsociado(nombreProducto);
+            productoService.sumarAlStock(producto, cantidad);
+        }
     }
 
 }

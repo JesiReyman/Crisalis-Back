@@ -5,8 +5,6 @@ import java.util.List;
 import com.crisalis.crisalisback.dto.EstadoDTO;
 import com.crisalis.crisalisback.dto.ItemPedidoDto;
 import com.crisalis.crisalisback.dto.PedidoDTO;
-import com.crisalis.crisalisback.enums.EstadoDePedido;
-import com.crisalis.crisalisback.repository.IPedidoRepositorio;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +38,7 @@ public class PedidoController {
 
     @GetMapping("/{idPersona}/lista")
     public ResponseEntity<List<Pedido>> listarPedidosDePersona(@PathVariable("idPersona") Long idPersona) {
-        List<Pedido> listaPedido = pedidoService.listarPedidosPorClienteFechaAsc(idPersona);
+        List<Pedido> listaPedido = pedidoService.listarPedidosPorClienteFechaDesc(idPersona);
         return new ResponseEntity<>(listaPedido, HttpStatus.OK);
     }
 

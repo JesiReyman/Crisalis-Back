@@ -20,11 +20,6 @@ import java.util.List;
 public class Servicio extends ProductoBase{
     private BigDecimal precioSoporte;
 
-    /*@Getter(value = AccessLevel.NONE)
-    @Setter(value = AccessLevel.NONE)
-    @OneToMany(mappedBy = "servicio")
-    private List<ServicioPedido> listaServiciosPedidos = new ArrayList<ServicioPedido>();*/
-
     public Servicio(String tipo, String nombre, String descripcion, BigDecimal precioBase, BigDecimal precioSoporte) {
         super(tipo, nombre, descripcion, precioBase);
         this.precioSoporte = precioSoporte;
@@ -41,6 +36,7 @@ public class Servicio extends ProductoBase{
                 .descripcion(this.getDescripcion())
                 .precioBase(this.getPrecioBase())
                 .precioSoporte(this.precioSoporte)
+                .tipo(this.getTipo())
                 .build();
     }
 }

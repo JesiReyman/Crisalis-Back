@@ -24,11 +24,6 @@ public class ItemPedidoController {
         return new ResponseEntity<>(listaItems, HttpStatus.OK);
     }
 
-    /*@PostMapping("{idCliente}/guardarLista")
-    public void guardarListaItems(@PathVariable("idCliente") int idCliente, @RequestBody List<ItemPedidoDto> listaItems){
-        this.itemPedidoService.guardarItemsPedidos(listaItems, idCliente);
-    }*/
-
     @GetMapping("lista/{tipo}")
     public List<ItemPedido> listarPorTipo(@PathVariable("tipo") String tipo){
         List<ItemPedido> listaItems = itemPedidoService.buscarPorTipo(tipo);
@@ -39,5 +34,11 @@ public class ItemPedidoController {
     public ResponseEntity<ItemPedidoDto> estimarItemPedido(@RequestBody ItemPedidoDto itemPedidoDto){
         ItemPedidoDto itemEstimado = itemPedidoService.calcularItem(itemPedidoDto);
         return new ResponseEntity<>(itemEstimado, HttpStatus.OK);
+    }
+
+    @GetMapping("{idPedido}/lista")
+    public ResponseEntity<List<ItemPedidoDto>> itemsPedidos(@PathVariable("idPedido") long idPedido){
+        List<ItemPedidoDto> lista = itemPedidoService.obtenerItemsDePedido(idPedido);
+        return new ResponseEntity<>(lista, HttpStatus.OK);
     }
 }

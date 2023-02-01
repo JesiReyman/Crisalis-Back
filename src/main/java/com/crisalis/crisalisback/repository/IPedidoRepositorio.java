@@ -11,6 +11,6 @@ import com.crisalis.crisalisback.model.Pedido;
 public interface IPedidoRepositorio extends JpaRepository<Pedido, Long>{
     List<Pedido> findByClienteId(Long personaId);
 
-    List<Pedido> findByClienteIdOrderByFechaCreacionAsc(Long personaId);
+    List<Pedido> findByClienteIdOrderByFechaCreacionDesc(Long personaId);
 
 }

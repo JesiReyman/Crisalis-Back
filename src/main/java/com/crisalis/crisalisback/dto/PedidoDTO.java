@@ -24,15 +24,17 @@ public class PedidoDTO {
     private EstadoDePedido estado ;
     private BigDecimal precioBase;
     private BigDecimal totalImpuestos;
+    private BigDecimal totalAdicionales;
     private BigDecimal total;
 
-    public PedidoDTO(Pedido pedido, long dniOCuitCliente, BigDecimal precioBase, BigDecimal totalImpuestos, BigDecimal total){
+    public PedidoDTO(Pedido pedido, long dniOCuitCliente, BigDecimal precioBase, BigDecimal totalImpuestos, BigDecimal totalAdicionales  , BigDecimal total){
         this.id = pedido.getId();
         this.fechaCreacion = pedido.getFechaCreacion();
         this.estado = pedido.getEstado();
         this.dniOCuitCliente = dniOCuitCliente;
         this.precioBase = precioBase;
         this.totalImpuestos = totalImpuestos;
+        this.totalAdicionales = totalAdicionales;
         this.total = total;
     }
 

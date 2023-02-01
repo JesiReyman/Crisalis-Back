@@ -31,19 +31,6 @@ public class ServicioPedidoService {
         return servicioService.encontrarServicio(nombreServicio);
     }
 
-
-
-    /*public ServicioPedido agregarServicioPedido(ItemPedidoDto itemPedidoDto, Pedido pedido, String nombre){
-        ServicioPedido servicioPedido = new ServicioPedido();
-        Servicio servicio = iServicio.findByNombre(nombre).orElseThrow();
-        servicioPedido.setPedido(pedido);
-        servicioPedido.setProductoBase(servicio);
-        servicioPedido.setCantidad(itemPedidoDto.getCantidad());
-        //double precioTotal = calculoPrecioTotal(servicio);
-        //System.out.println("El precio total mensual del servicio es de: " + precioTotal);
-        //servicioPedido.setPrecioFinalUnitario(precioTotal);
-        return iServicioPedido.save(servicioPedido);
-    }*/
     
     public BigDecimal calculoPrecioTotal(BigDecimal precioBase, BigDecimal totalImpuestos, String nombreServicio){
         Servicio servicio = buscarServicioAsociado(nombreServicio);
@@ -62,6 +49,16 @@ public class ServicioPedidoService {
         servicioPedido.setActivo(activo);
         return iServicioPedido.save(servicioPedido);
     }
+
+    public BigDecimal setAdicionalPrecioSoporte(String nombreServicio){
+        Servicio servicio = buscarServicioAsociado(nombreServicio);
+        return servicio.getPrecioSoporte();
+    }
+
+    public ServicioPedido buscarPorId(long idServicioPedido){
+        return iServicioPedido.findById(idServicioPedido).orElseThrow();
+    }
+
 
     
 }

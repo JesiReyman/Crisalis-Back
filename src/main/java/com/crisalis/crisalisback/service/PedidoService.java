@@ -6,7 +6,6 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
-import com.crisalis.crisalisback.Exception.ApiExceptionHandler;
 import com.crisalis.crisalisback.dto.EstadoDTO;
 import com.crisalis.crisalisback.dto.ItemPedidoDto;
 import com.crisalis.crisalisback.dto.PedidoDTO;
@@ -20,12 +19,6 @@ import org.springframework.stereotype.Service;
 @Transactional
 public class PedidoService {
     private final IPedidoRepositorio iPedido;
-
-    private final IServicioPedido iServicioPedido;
-
-    private final IProductoPedido iProductoPedido;
-    private EmpresaClienteService empresaClienteService;
-    private PersonaClienteService personaClienteService;
     private ClienteService clienteService;
     private ItemPedidoService itemPedidoService;
 
@@ -33,17 +26,9 @@ public class PedidoService {
 
     @Autowired
     public PedidoService(IPedidoRepositorio iPedido,
-
-                         IServicioPedido iServicioPedido,
-                         IProductoPedido iProductoPedido,
-
                          ClienteService clienteService,
                          ItemPedidoService itemPedidoService) {
         this.iPedido = iPedido;
-
-        this.iServicioPedido = iServicioPedido;
-        this.iProductoPedido = iProductoPedido;
-
         this.clienteService = clienteService;
         this.itemPedidoService = itemPedidoService;
     }
@@ -53,6 +38,7 @@ public class PedidoService {
         Cliente cliente = clienteService.encontrarCliente(dniOCuitCLiente);
         Pedido pedido = new Pedido(cliente);
         List<ItemPedido> listaItems = itemPedidoService.setearItemPedido(listaItemsPedidos, pedido);
+        //List<Pedido> pedidosAnteriores =
         pedido.setListaDeItems(listaItems);
         return iPedido.save(pedido);
 
@@ -68,21 +54,23 @@ public class PedidoService {
             List<ItemPedido> listaItems = pedido.getListaDeItems();
             BigDecimal precioBase = BigDecimal.ZERO;
             BigDecimal totalImpuestos = BigDecimal.ZERO;
+            BigDecimal totalAdicionales = BigDecimal.ZERO;
             BigDecimal total = BigDecimal.ZERO;
             for (ItemPedido item : listaItems
                  ) {
                  precioBase = precioBase.add(item.getPrecioBase()).multiply(new BigDecimal(item.getCantidad()) );
                  totalImpuestos = totalImpuestos.add(item.getTotalImpuestos()).multiply(new BigDecimal(item.getCantidad()));
+                 totalAdicionales = totalAdicionales.add(item.getTotalAdicionales()).multiply(new BigDecimal(item.getCantidad()));
                  total = total.add(item.getPrecioFinalUnitario()).multiply(new BigDecimal(item.getCantidad()));
             }
-            PedidoDTO pedidoDTO = new PedidoDTO(pedido, dniOCuit, precioBase, totalImpuestos, total);
+            PedidoDTO pedidoDTO = new PedidoDTO(pedido, dniOCuit, precioBase, totalImpuestos, totalAdicionales, total);
             listaPedidosDTO.add(pedidoDTO);
         }
         return listaPedidosDTO;
     }
 
-    public List<Pedido> listarPedidosPorClienteFechaAsc(Long idPersona) {
-        return iPedido.findByClienteIdOrderByFechaCreacionAsc(idPersona);
+    public List<Pedido> listarPedidosPorClienteFechaDesc(Long idPersona) {
+        return iPedido.findByClienteIdOrderByFechaCreacionDesc(idPersona);
     }
 
     public void eliminarPedido(Long idPedido){
@@ -95,9 +83,18 @@ public class PedidoService {
 
     public void cambiarEstado(long idPedido, EstadoDTO estadoDTO){
         Pedido pedido = encontrarPedido(idPedido);
-        pedido.setEstado(estadoDTO.getEstado());
+        if(pedido.getEstado().equals(EstadoDePedido.PENDIENTE)){
+            if (estadoDTO.getEstado().equals(EstadoDePedido.CANCELADO)){
+                itemPedidoService.reponerProductos(idPedido);
+            }
+            pedido.setEstado(estadoDTO.getEstado());
+        } else{
+            System.out.println("no se puede cambiar el estado");
+        }
+
+
     }
-    public BigDecimal calculoDescuento(Long idPedido){
+    /*public BigDecimal calculoDescuento(Long idPedido){
 
         List<ProductoPedido> listaProductosPedidos = iProductoPedido.findByPedidoId(idPedido);
         BigDecimal descuento = BigDecimal.ZERO;
@@ -107,7 +104,7 @@ public class PedidoService {
             descuento = descuento.add(Adicional.descuentoProducto(precio));
         }
         return descuento;
-    }
+    }*/
 
     /*public ServicioPedido servicioActivo(Long idPersona){
         ServicioPedido servicioActivo = new ServicioPedido();

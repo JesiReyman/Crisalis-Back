@@ -53,6 +53,12 @@ public class ProductoService {
         iProducto.save(producto);
     }
 
+    public void sumarAlStock(Producto producto, int cantidad){
+        int stockActual = producto.getStock();
+        stockActual += cantidad;
+        producto.setStock(stockActual);
+    }
+
     public void eliminarProducto(Long idProducto){
         iProducto.deleteById(idProducto);
     }

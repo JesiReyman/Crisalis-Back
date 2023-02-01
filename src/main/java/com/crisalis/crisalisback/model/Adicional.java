@@ -1,19 +1,35 @@
 package com.crisalis.crisalisback.model;
 
+import com.crisalis.crisalisback.enums.AplicaAdicional;
+import com.crisalis.crisalisback.enums.TipoAdicional;
+import lombok.*;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-
+@Getter @Setter
+@NoArgsConstructor
+@Entity
 public class Adicional {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+    @Column(nullable = false, unique = true)
+    private String nombre;
+    @Column(precision = 11, scale = 4)
+    private BigDecimal porcentaje;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private AplicaAdicional aplica;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private TipoAdicional tipo;
 
-    private static BigDecimal incrementoGarantia = new BigDecimal("0.02");
-    private static BigDecimal descuentoProducto = new BigDecimal("0.1");
-
-    public static BigDecimal cargoGarantia(BigDecimal precio, int aniosGarantia){
-        return precio.multiply(new BigDecimal(aniosGarantia)).multiply(incrementoGarantia);
-    }
-
-    public static BigDecimal descuentoProducto(BigDecimal precioProducto){
-
-        return precioProducto.multiply(descuentoProducto);
+    @Builder
+    public Adicional(String nombre, BigDecimal porcentaje, AplicaAdicional aplica, TipoAdicional tipo) {
+        this.nombre = nombre;
+        this.porcentaje = porcentaje;
+        this.aplica = aplica;
+        this.tipo = tipo;
     }
 }

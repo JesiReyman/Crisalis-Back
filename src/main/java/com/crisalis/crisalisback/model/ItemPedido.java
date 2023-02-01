@@ -23,6 +23,7 @@ public class ItemPedido {
 
     private BigDecimal precioBase;
     private BigDecimal totalImpuestos;
+    private BigDecimal totalAdicionales;
     private BigDecimal precioFinalUnitario;
 
     private int cantidad;
@@ -38,11 +39,12 @@ public class ItemPedido {
     @JsonIgnore
     private Pedido pedido;
 
-    public ItemPedido(BigDecimal precioBase, BigDecimal totalImpuestos, BigDecimal precioFinalUnitario, int cantidad, ProductoBase productoBase) {
+    public ItemPedido(BigDecimal precioBase, BigDecimal totalImpuestos, BigDecimal precioFinalUnitario, int cantidad, ProductoBase productoBase, BigDecimal totalAdicionales) {
         this.precioBase = precioBase;
         this.totalImpuestos = totalImpuestos;
         this.precioFinalUnitario = precioFinalUnitario;
         this.cantidad = cantidad;
         this.productoBase = productoBase;
+        this.totalAdicionales = totalAdicionales;
     }
 }
