@@ -2,6 +2,7 @@ package com.crisalis.crisalisback.controller;
 
 import com.crisalis.crisalisback.dto.ItemPedidoDto;
 import com.crisalis.crisalisback.model.ItemPedido;
+import com.crisalis.crisalisback.model.ServicioPedido;
 import com.crisalis.crisalisback.service.ItemPedidoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,5 +41,11 @@ public class ItemPedidoController {
     public ResponseEntity<List<ItemPedidoDto>> itemsPedidos(@PathVariable("idPedido") long idPedido){
         List<ItemPedidoDto> lista = itemPedidoService.obtenerItemsDePedido(idPedido);
         return new ResponseEntity<>(lista, HttpStatus.OK);
+    }
+
+    @GetMapping("servicioActivo/{idCliente}")
+    public ResponseEntity<ItemPedido> servicioActivo(@PathVariable("idCliente") long idCliente){
+        ItemPedido servicioActivo = itemPedidoService.buscarServicioActivo(idCliente);
+        return new ResponseEntity<>(servicioActivo, HttpStatus.OK);
     }
 }

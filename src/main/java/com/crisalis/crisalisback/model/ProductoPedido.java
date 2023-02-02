@@ -19,9 +19,9 @@ public class ProductoPedido extends ItemPedido{
                           BigDecimal totalImpuestos,
                           BigDecimal precioFinalUnitario,
                           BigDecimal totalAdicionales,
-                          int cantidad, ProductoBase productoBase,
+                          int cantidad, String tipo, ProductoBase productoBase,
                           int aniosDeGarantia) {
-        super(precioBase, totalImpuestos, precioFinalUnitario, cantidad, productoBase, totalAdicionales);
+        super(precioBase, totalImpuestos, precioFinalUnitario, cantidad, tipo, productoBase, totalAdicionales);
         this.aniosDeGarantia = aniosDeGarantia;
     }
 }

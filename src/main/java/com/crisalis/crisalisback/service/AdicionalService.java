@@ -64,6 +64,14 @@ public class AdicionalService {
 
     }
 
+    public List<AdicionalDTO> obtenerListaDescuentos(){
+        return adicionalRepository.findByTipo(TipoAdicional.DESCUENTO).orElseThrow()
+                .stream()
+                .map(AdicionalDTO:: new)
+                .collect(Collectors.toList());
+
+    }
+
     public List<AdicionalDTO> listarTodos(){
         return adicionalRepository.findAll()
                 .stream()
@@ -116,6 +124,15 @@ public class AdicionalService {
 
     }
 
-
+    public BigDecimal calcularDescuento(BigDecimal precioBase){
+        List<AdicionalDTO> descuentos = obtenerListaDescuentos();
+        BigDecimal descCalcPorItem = BigDecimal.ZERO;
+        for (AdicionalDTO descuento : descuentos
+             ) {
+            descCalcPorItem = descCalcPorItem.add(calculoImpuestoOAdicional(precioBase, descuento.getPorcentaje()));
+        }
+                 ;
+        return descCalcPorItem;
+    }
 
 }

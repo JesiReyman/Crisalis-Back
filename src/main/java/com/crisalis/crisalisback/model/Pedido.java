@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Cascade;
+
 
 @Data
 @NoArgsConstructor
@@ -35,8 +35,10 @@ public class Pedido {
     @ManyToOne
     @JsonIgnore
     @NotNull
-    //@Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     private Cliente cliente;
+
+    @OneToOne(mappedBy="pedido", cascade = {CascadeType.ALL}, orphanRemoval = true)
+    private Descuento descuento;
 
 
     public Pedido(Cliente cliente) {
@@ -50,8 +52,5 @@ public class Pedido {
         this.estado = estado;
     }
 
-    public void addItemPedido(ItemPedido itemPedido){
-        listaDeItems.add(itemPedido);
-        itemPedido.setPedido(this);
-    }
+
 }

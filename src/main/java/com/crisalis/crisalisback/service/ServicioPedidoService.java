@@ -31,6 +31,10 @@ public class ServicioPedidoService {
         return servicioService.encontrarServicio(nombreServicio);
     }
 
+    public ServicioPedido  buscarServicioPedido(long idServicioPedido){
+        return iServicioPedido.findById(idServicioPedido).orElseThrow();
+    }
+
     
     public BigDecimal calculoPrecioTotal(BigDecimal precioBase, BigDecimal totalImpuestos, String nombreServicio){
         Servicio servicio = buscarServicioAsociado(nombreServicio);

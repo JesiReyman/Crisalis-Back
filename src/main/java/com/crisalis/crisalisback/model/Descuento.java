@@ -21,14 +21,13 @@ import java.math.BigDecimal;
 @Entity
 public class Descuento {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     private BigDecimal descuentoGenerado;
 
     @OneToOne
     @MapsId
-    @JoinColumn(name = "pedido_id")
+    @JoinColumn(name = "pedido")
     private Pedido pedido;
 
     @ManyToOne

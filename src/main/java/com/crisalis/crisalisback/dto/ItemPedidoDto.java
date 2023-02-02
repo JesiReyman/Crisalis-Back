@@ -25,6 +25,7 @@ public class ItemPedidoDto {
     private int aniosDeGarantia;
     private boolean activo;
     private String tipo;
+    private BigDecimal descuento;
 
     @Builder
     public ItemPedidoDto(ItemPedido itemPedido) {
@@ -34,6 +35,7 @@ public class ItemPedidoDto {
         this.precioFinalUnitario = itemPedido.getPrecioFinalUnitario();
         this.totalAdicionales = itemPedido.getTotalAdicionales();
         this.tipo = itemPedido.getTipo();
+
     }
 
     public static ItemPedido dtoAProductoPedido(ItemPedidoDto itemPedidoDto){
@@ -44,6 +46,7 @@ public class ItemPedidoDto {
                 .totalAdicionales(itemPedidoDto.totalAdicionales)
                 .cantidad(itemPedidoDto.cantidad)
                 .aniosDeGarantia(itemPedidoDto.aniosDeGarantia)
+                .tipo(itemPedidoDto.tipo)
                 .build();
     }
 
@@ -56,6 +59,7 @@ public class ItemPedidoDto {
                 .totalAdicionales(itemPedidoDto.totalAdicionales)
                 .cantidad(itemPedidoDto.cantidad)
                 .activo(itemPedidoDto.activo)
+                .tipo(itemPedidoDto.tipo)
                 .build();
     }
 }

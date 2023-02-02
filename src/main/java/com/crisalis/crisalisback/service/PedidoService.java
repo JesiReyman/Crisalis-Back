@@ -13,7 +13,11 @@ import com.crisalis.crisalisback.enums.EstadoDePedido;
 import com.crisalis.crisalisback.model.*;
 import com.crisalis.crisalisback.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.jdbc.config.SortedResourcesFactoryBean;
 import org.springframework.stereotype.Service;
+import static org.apache.commons.lang3.compare.ComparableUtils.is;
+
 
 @Service
 @Transactional
@@ -21,16 +25,19 @@ public class PedidoService {
     private final IPedidoRepositorio iPedido;
     private ClienteService clienteService;
     private ItemPedidoService itemPedidoService;
+    private DescuentoService descuentoService;
 
 
 
     @Autowired
     public PedidoService(IPedidoRepositorio iPedido,
                          ClienteService clienteService,
-                         ItemPedidoService itemPedidoService) {
+                         ItemPedidoService itemPedidoService,
+                         DescuentoService descuentoService) {
         this.iPedido = iPedido;
         this.clienteService = clienteService;
         this.itemPedidoService = itemPedidoService;
+        this.descuentoService = descuentoService;
     }
 
 
@@ -38,15 +45,32 @@ public class PedidoService {
         Cliente cliente = clienteService.encontrarCliente(dniOCuitCLiente);
         Pedido pedido = new Pedido(cliente);
         List<ItemPedido> listaItems = itemPedidoService.setearItemPedido(listaItemsPedidos, pedido);
-        //List<Pedido> pedidosAnteriores =
         pedido.setListaDeItems(listaItems);
-        return iPedido.save(pedido);
+        ServicioPedido servicioActivo = itemPedidoService.buscarServicioActivo(cliente.getId());
+        pedido = iPedido.save(pedido);
+        if(servicioActivo != null){
+            BigDecimal descuentoGenerado = itemPedidoService.calculoDescuentoTotal(listaItems);
+            System.out.println(pedido);
+            Descuento descuento = new Descuento();
+            descuento.setDescuentoGenerado(descuentoGenerado);
+            descuento.setServicioPedido(servicioActivo);
 
+            descuento.setPedido(pedido);
+
+            descuentoService.guardarDescuento(descuento);
+            //pedido.setDescuento(descuento);
+
+
+
+            //
+        }
+
+        return pedido;
     }
 
 
     public List<PedidoDTO> listarPedidos(){
-        List<Pedido> listaPedidos = iPedido.findAll();
+        List<Pedido> listaPedidos = iPedido.findAll(Sort.by(Sort.Direction.DESC, "fechaCreacion"));
         List<PedidoDTO> listaPedidosDTO = new ArrayList<>();
         for (Pedido pedido : listaPedidos
         ) {
@@ -63,7 +87,13 @@ public class PedidoService {
                  totalAdicionales = totalAdicionales.add(item.getTotalAdicionales()).multiply(new BigDecimal(item.getCantidad()));
                  total = total.add(item.getPrecioFinalUnitario()).multiply(new BigDecimal(item.getCantidad()));
             }
-            PedidoDTO pedidoDTO = new PedidoDTO(pedido, dniOCuit, precioBase, totalImpuestos, totalAdicionales, total);
+            Descuento descuento = descuentoService.buscarDescuento(pedido.getId());
+            BigDecimal descuentoGenerado = BigDecimal.ZERO;
+            if(descuento != null){
+                descuentoGenerado = descuentoGenerado.add(descuento.getDescuentoGenerado());
+            }
+
+            PedidoDTO pedidoDTO = new PedidoDTO(pedido, dniOCuit, precioBase, totalImpuestos, totalAdicionales, total, descuentoGenerado);
             listaPedidosDTO.add(pedidoDTO);
         }
         return listaPedidosDTO;
@@ -94,40 +124,6 @@ public class PedidoService {
 
 
     }
-    /*public BigDecimal calculoDescuento(Long idPedido){
-
-        List<ProductoPedido> listaProductosPedidos = iProductoPedido.findByPedidoId(idPedido);
-        BigDecimal descuento = BigDecimal.ZERO;
-        for (ProductoPedido productoPedido : listaProductosPedidos){
-            ProductoBase producto = productoPedido.getProductoBase();
-            BigDecimal precio = producto.getPrecioBase();
-            descuento = descuento.add(Adicional.descuentoProducto(precio));
-        }
-        return descuento;
-    }*/
-
-    /*public ServicioPedido servicioActivo(Long idPersona){
-        ServicioPedido servicioActivo = new ServicioPedido();
-        List<Pedido> listaPedidos = listarPedidosPorClienteFechaAsc(idPersona);
-        //recorro la lista
-        for(Pedido pedido : listaPedidos){
-            //extraigo el id del pedido para luego buscar en la lista de servicios
-            Long id = pedido.getId();
-            List <ServicioPedido> serviciosPedidos = iServicioPedido.findByPedidoId(id); 
-            for (ServicioPedido servicioPedido : serviciosPedidos){
-                boolean estaActivo = servicioPedido.isActivo();
-                if(estaActivo){
-                    servicioActivo = servicioPedido;
-                    break;
-                }
-            }
-        }
-        return servicioActivo;
-    }*/
-
-
-
-
 
 
 }

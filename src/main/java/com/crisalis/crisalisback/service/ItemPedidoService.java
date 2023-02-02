@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.apache.commons.lang3.compare.ComparableUtils.is;
+
 @Service
 @Transactional
 public class ItemPedidoService {
@@ -21,6 +23,7 @@ public class ItemPedidoService {
     private ProductoBaseService productoBaseService;
     private ProductoService productoService;
     private AdicionalService adicionalService;
+    private ClienteService clienteService;
 
     @Autowired
     public ItemPedidoService(IItemPedidoRepository iItemPedidoRepository,
@@ -28,7 +31,8 @@ public class ItemPedidoService {
                              ProductoPedidoService productoPedidoService,
                              ServicioPedidoService servicioPedidoService,
                              AdicionalService adicionalService,
-                             ProductoService productoService) {
+                             ProductoService productoService,
+                             ClienteService clienteService) {
         this.iItemPedidoRepository = iItemPedidoRepository;
 
         this.productoBaseService = productoBaseService;
@@ -37,6 +41,7 @@ public class ItemPedidoService {
 
         this.adicionalService = adicionalService;
         this.productoService = productoService;
+        this.clienteService = clienteService;
     }
     public List<ItemPedido> listaItemsPedidos(){
         return iItemPedidoRepository.findAll();
@@ -88,6 +93,8 @@ public class ItemPedidoService {
             }
         }
 
+
+
         //agrego los campos que me faltan al DTO
         itemPedidoDto.setPrecioBase(precioBase);
         itemPedidoDto.setTotalImpuestos(impuestoTotal);
@@ -129,7 +136,7 @@ public class ItemPedidoService {
         return iItemPedidoRepository.findByPedidoIdAndTipo(idPedido, "servicio");
     }
 
-    public ServicioPedido obtenerServicioActivo(long idPedido){
+    /*public ServicioPedido obtenerServicioActivo(long idPedido){
         List<ItemPedido> servicios = obtenerServiciosDePedido(idPedido);
         ServicioPedido servicioActivo = null;
         for (ItemPedido item : servicios
@@ -140,8 +147,36 @@ public class ItemPedidoService {
             }
         }
         return servicioActivo;
+    }*/
+
+    public ServicioPedido buscarServicioActivo(long idCliente){
+        ItemPedido itemActivo = iItemPedidoRepository.BUSCAR_SERVICIO_ACTIVO(idCliente).orElse(null);
+        ServicioPedido servicioActivo = null;
+        if(itemActivo != null){
+             servicioActivo = servicioPedidoService.buscarServicioPedido(itemActivo.getId());
+        }
+       return servicioActivo;
+
     }
 
-    //public BigDecimal calculoDescuento()
+    public BigDecimal calculoDescuentoTotal(List<ItemPedido> listaItems) {
+        List<ItemPedido> listaProductos = listaItems.stream()
+                .filter(item -> item.getTipo().equals("producto"))
+                .toList();
+        BigDecimal descuentoCalculado = BigDecimal.ZERO;
+        for (ItemPedido producto : listaProductos
+             ) {
+             descuentoCalculado = descuentoCalculado.add(adicionalService.calcularDescuento(producto.getPrecioBase())) ;
+
+        }
+        BigDecimal descuentoTotal = BigDecimal.ZERO;
+        if(is(descuentoCalculado).lessThanOrEqualTo(new BigDecimal(2500))){
+            descuentoTotal = descuentoTotal.add(descuentoCalculado);
+        } else {
+            descuentoTotal = new BigDecimal(2500);
+        }
+
+        return descuentoTotal;
+    }
 
 }

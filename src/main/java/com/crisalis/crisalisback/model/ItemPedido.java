@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 @Getter @Setter
 @NoArgsConstructor
 @Entity
+@Table
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="tipo", 
   discriminatorType = DiscriminatorType.STRING)
@@ -39,11 +40,12 @@ public class ItemPedido {
     @JsonIgnore
     private Pedido pedido;
 
-    public ItemPedido(BigDecimal precioBase, BigDecimal totalImpuestos, BigDecimal precioFinalUnitario, int cantidad, ProductoBase productoBase, BigDecimal totalAdicionales) {
+    public ItemPedido(BigDecimal precioBase, BigDecimal totalImpuestos, BigDecimal precioFinalUnitario, int cantidad, String tipo, ProductoBase productoBase, BigDecimal totalAdicionales) {
         this.precioBase = precioBase;
         this.totalImpuestos = totalImpuestos;
         this.precioFinalUnitario = precioFinalUnitario;
         this.cantidad = cantidad;
+        this.tipo = tipo;
         this.productoBase = productoBase;
         this.totalAdicionales = totalAdicionales;
     }

@@ -5,7 +5,10 @@ import org.springframework.stereotype.Repository;
 
 import com.crisalis.crisalisback.model.Descuento;
 
+import java.util.Optional;
+
 @Repository
 public interface IDescuento extends JpaRepository<Descuento, Long>{
-    
+
+    Optional<Descuento> findByPedidoId(Long pedidoId);
 }
