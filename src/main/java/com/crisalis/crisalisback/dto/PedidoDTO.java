@@ -2,6 +2,7 @@ package com.crisalis.crisalisback.dto;
 
 import com.crisalis.crisalisback.enums.EstadoDePedido;
 import com.crisalis.crisalisback.model.Pedido;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,6 +12,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -20,7 +22,8 @@ import java.util.Date;
 public class PedidoDTO {
     private long id;
     private long dniOCuitCliente;
-    private Date fechaCreacion;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime fechaCreacion;
     private EstadoDePedido estado ;
     private BigDecimal precioBase;
     private BigDecimal totalImpuestos;

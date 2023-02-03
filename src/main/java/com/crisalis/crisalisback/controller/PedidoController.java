@@ -57,4 +57,10 @@ public class PedidoController {
     public void cambiarEstado(@PathVariable("idPedido") Long idPedido, @RequestBody EstadoDTO estadoDTO){
         pedidoService.cambiarEstado(idPedido, estadoDTO);
     }
+
+    @PutMapping("editar/{idPedido}")
+    public ResponseEntity<Pedido> editarPedido(@PathVariable("idPedido") Long idPedido, @RequestBody List<ItemPedidoDto> listaItems){
+        Pedido pedido = pedidoService.editarPedido(idPedido, listaItems);
+        return new ResponseEntity<>(pedido, HttpStatus.OK);
+    }
 }

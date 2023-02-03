@@ -1,6 +1,7 @@
 package com.crisalis.crisalisback.model;
 
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -9,11 +10,13 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import com.crisalis.crisalisback.enums.EstadoDePedido;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 
 @Data
@@ -24,7 +27,9 @@ public class Pedido {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    private Date fechaCreacion;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm")
+    private LocalDateTime fechaCreacion;
     @NotNull
     @Enumerated(EnumType.STRING)
     private EstadoDePedido estado ;
@@ -42,7 +47,7 @@ public class Pedido {
 
 
     public Pedido(Cliente cliente) {
-        this.fechaCreacion = new Date();
+        this.fechaCreacion = LocalDateTime.now();
         this.estado = EstadoDePedido.PENDIENTE;
         this.cliente = cliente;
     }

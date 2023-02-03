@@ -115,6 +115,8 @@ public class AdicionalService {
             } else{
                 System.out.println("no aplica");
             }
+            System.out.println("el valor calculado es");
+            System.out.println(valorCalculado);
         }
         return valorCalculado;
     }

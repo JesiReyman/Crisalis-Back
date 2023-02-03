@@ -13,6 +13,7 @@ import com.crisalis.crisalisback.repository.IPedidoRepositorio;
 import com.crisalis.crisalisback.repository.IServicioPedido;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 @Transactional
@@ -63,6 +64,9 @@ public class ServicioPedidoService {
         return iServicioPedido.findById(idServicioPedido).orElseThrow();
     }
 
+    public List<ServicioPedido> buscarPorIdPedido(long idPedido){
+        return iServicioPedido.findByPedidoId(idPedido);
+    }
 
     
 }

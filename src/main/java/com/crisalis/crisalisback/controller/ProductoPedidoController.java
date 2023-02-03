@@ -1,17 +1,17 @@
 package com.crisalis.crisalisback.controller;
 
+import com.crisalis.crisalisback.dto.ItemPedidoDto;
+import com.crisalis.crisalisback.model.ItemPedido;
 import com.crisalis.crisalisback.model.ProductoPedido;
-import com.crisalis.crisalisback.model.ServicioPedido;
 import com.crisalis.crisalisback.service.ProductoPedidoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
+import java.util.List;
 
 @RestController
-@RequestMapping("/pedirProducto")
+@RequestMapping("/productoPedido")
 public class ProductoPedidoController {
     private ProductoPedidoService productoPedidoService;
 
@@ -36,5 +36,11 @@ public class ProductoPedidoController {
     public BigDecimal calcularDescuento(@PathVariable("idCliente") Long idCliente, @PathVariable("idProducto") Long idProducto){
         return productoPedidoService.calculoDescuento(idCliente, idProducto);
     }*/
+
+    @GetMapping("{idPedido}/lista")
+    public ResponseEntity<List<ItemPedidoDto>> productosPedidosPorPedido(@PathVariable("idPedido") long idPedido){
+        List<ItemPedidoDto> lista = productoPedidoService.productosDePedido(idPedido);
+        return new ResponseEntity<>(lista, HttpStatus.OK);
+    }
 
 }

@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import com.crisalis.crisalisback.model.ServicioPedido;
 import com.crisalis.crisalisback.service.ServicioPedidoService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/servicioPedido")
 public class ServicioPedidoController {
@@ -17,14 +19,6 @@ public class ServicioPedidoController {
     public ServicioPedidoController(ServicioPedidoService servicioPedidoService) {
         this.servicioPedidoService = servicioPedidoService;
     }
-
-    /*@PreAuthorize("hasRole('USER')")
-    @PostMapping("/{idPedido}/{idServicio}")
-    public ResponseEntity<ServicioPedido> pedirServicio(@RequestBody int cantidad, @PathVariable("idPedido") Long idPedido,
-                                                        @PathVariable("idServicio") Long idServicio) {
-        ServicioPedido nuevoServicioPedido = servicioPedidoService.agregarServicioPedido(cantidad, idPedido, idServicio);
-        return new ResponseEntity<>(nuevoServicioPedido, HttpStatus.OK);
-    }*/
 
     @DeleteMapping("/borrar/{idServicioPedido}")
     public void borrarServicioPedido(@PathVariable("idServicioPedido") Long idServicioPedido){
@@ -36,5 +30,11 @@ public class ServicioPedidoController {
                                                 @PathVariable("idPedido") Long idPedido, @RequestBody boolean activo){
         ServicioPedido servicioPedido = servicioPedidoService.cambiarEstadoServicio(nombreServicio, idPedido, activo);
         return new ResponseEntity<>(servicioPedido, HttpStatus.OK);
+    }
+
+    @GetMapping("{idPedido}/lista")
+    public ResponseEntity<List<ServicioPedido>> servicioPedidosPorIdPedido(@PathVariable("idPedido") long idPedido){
+        List<ServicioPedido> lista = servicioPedidoService.buscarPorIdPedido(idPedido);
+        return new ResponseEntity<>(lista, HttpStatus.OK);
     }
 }

@@ -32,10 +32,34 @@ public class ItemPedidoDto {
         this.nombre = itemPedido.getProductoBase().getNombre();
         this.cantidad = itemPedido.getCantidad();
         this.precioBase = itemPedido.getPrecioBase();
+        this.totalImpuestos = itemPedido.getTotalImpuestos();
         this.precioFinalUnitario = itemPedido.getPrecioFinalUnitario();
         this.totalAdicionales = itemPedido.getTotalAdicionales();
         this.tipo = itemPedido.getTipo();
 
+
+    }
+
+    public ItemPedidoDto(ProductoPedido productoPedido){
+        this.nombre = productoPedido.getProductoBase().getNombre();
+        this.cantidad = productoPedido.getCantidad();
+        this.precioBase = productoPedido.getPrecioBase();
+        this.totalImpuestos = productoPedido.getTotalImpuestos();
+        this.precioFinalUnitario = productoPedido.getPrecioFinalUnitario();
+        this.totalAdicionales = productoPedido.getTotalAdicionales();
+        this.tipo = productoPedido.getTipo();
+        this.aniosDeGarantia = productoPedido.getAniosDeGarantia();
+    }
+
+    public ItemPedidoDto(ServicioPedido servicioPedido){
+        this.nombre = servicioPedido.getProductoBase().getNombre();
+        this.cantidad = servicioPedido.getCantidad();
+        this.precioBase = servicioPedido.getPrecioBase();
+        this.totalImpuestos = servicioPedido.getTotalImpuestos();
+        this.precioFinalUnitario = servicioPedido.getPrecioFinalUnitario();
+        this.totalAdicionales = servicioPedido.getTotalAdicionales();
+        this.tipo = servicioPedido.getTipo();
+        this.activo = servicioPedido.isActivo();
     }
 
     public static ItemPedido dtoAProductoPedido(ItemPedidoDto itemPedidoDto){

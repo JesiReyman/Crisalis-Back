@@ -44,13 +44,12 @@ public class PedidoService {
     public Pedido crearPedido(long dniOCuitCLiente, List<ItemPedidoDto> listaItemsPedidos){
         Cliente cliente = clienteService.encontrarCliente(dniOCuitCLiente);
         Pedido pedido = new Pedido(cliente);
-        List<ItemPedido> listaItems = itemPedidoService.setearItemPedido(listaItemsPedidos, pedido);
+        List<ItemPedido> listaItems = itemPedidoService.setearItemPedido(listaItemsPedidos, pedido, cliente.getDniOCuit());
         pedido.setListaDeItems(listaItems);
         ServicioPedido servicioActivo = itemPedidoService.buscarServicioActivo(cliente.getId());
         pedido = iPedido.save(pedido);
         if(servicioActivo != null){
             BigDecimal descuentoGenerado = itemPedidoService.calculoDescuentoTotal(listaItems);
-            System.out.println(pedido);
             Descuento descuento = new Descuento();
             descuento.setDescuentoGenerado(descuentoGenerado);
             descuento.setServicioPedido(servicioActivo);
@@ -60,9 +59,6 @@ public class PedidoService {
             descuentoService.guardarDescuento(descuento);
             //pedido.setDescuento(descuento);
 
-
-
-            //
         }
 
         return pedido;
@@ -121,8 +117,15 @@ public class PedidoService {
         } else{
             System.out.println("no se puede cambiar el estado");
         }
+    }
 
-
+    public Pedido editarPedido(long idPedido, List<ItemPedidoDto> listaItems){
+        Pedido pedido = encontrarPedido(idPedido);
+        Cliente cliente = pedido.getCliente();
+        pedido.getListaDeItems().clear();
+        List<ItemPedido> itemsPedidos = itemPedidoService.setearItemPedido(listaItems, pedido, cliente.getDniOCuit());
+        pedido.getListaDeItems().addAll(itemsPedidos);
+        return pedido;
     }
 
 

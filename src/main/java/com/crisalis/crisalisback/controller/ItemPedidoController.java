@@ -31,9 +31,9 @@ public class ItemPedidoController {
         return listaItems;
     }
 
-    @PostMapping("estimarItem")
-    public ResponseEntity<ItemPedidoDto> estimarItemPedido(@RequestBody ItemPedidoDto itemPedidoDto){
-        ItemPedidoDto itemEstimado = itemPedidoService.calcularItem(itemPedidoDto);
+    @PostMapping("estimarItem/{dniOCuitCliente}")
+    public ResponseEntity<ItemPedidoDto> estimarItemPedido(@PathVariable("dniOCuitCliente") long dniOCuitCLiente , @RequestBody ItemPedidoDto itemPedidoDto){
+        ItemPedidoDto itemEstimado = itemPedidoService.calcularItem(itemPedidoDto, dniOCuitCLiente);
         return new ResponseEntity<>(itemEstimado, HttpStatus.OK);
     }
 

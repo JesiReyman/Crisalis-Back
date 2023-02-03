@@ -33,7 +33,7 @@ public class ItemPedido {
     private String tipo;
  
     @ManyToOne
-    @JsonIgnore
+
     private ProductoBase productoBase;
 
     @ManyToOne

@@ -2,6 +2,7 @@ package com.crisalis.crisalisback.service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -10,10 +11,8 @@ import com.crisalis.crisalisback.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.crisalis.crisalisback.repository.IPedidoRepositorio;
 import com.crisalis.crisalisback.repository.IProducto;
 import com.crisalis.crisalisback.repository.IProductoPedido;
-import com.crisalis.crisalisback.repository.IServicioPedido;
 
 @Service
 @Transactional
@@ -31,10 +30,10 @@ public class ProductoPedidoService {
         this.iProductoPedido = iProductoPedido;
         this.iProducto = iProducto;
         this.productoService = productoService;
-        this.adicionalService = this.adicionalService;
+        this.adicionalService = adicionalService;
     }
 
-    public ProductoPedido agregarProductoPedido(ItemPedidoDto itemPedidoDto, String nombre){
+    /*public ProductoPedido agregarProductoPedido(ItemPedidoDto itemPedidoDto, String nombre){
         Producto producto = productoService.traerProductoByNombre(nombre);
         ProductoPedido productoPedido = new ProductoPedido();
         productoPedido.setProductoBase(producto);
@@ -51,7 +50,7 @@ public class ProductoPedidoService {
         //productoPedido.setPrecioFinalUnitario(precioTotal);
         
         return iProductoPedido.save(productoPedido);
-    }
+    }*/
 
     public BigDecimal calculoPrecioTotal(BigDecimal precioBase, BigDecimal precioImpuestos, BigDecimal adicionalTotal){
 
@@ -91,6 +90,15 @@ public class ProductoPedidoService {
             Producto producto = buscarProductoAsociado(nombreProducto);
             productoService.sumarAlStock(producto, cantidad);
         }
+    }
+
+    public List<ProductoPedido> buscarPorIdPedido(long idPedido){
+        return iProductoPedido.findByPedidoId(idPedido);
+    }
+
+    public List<ItemPedidoDto> productosDePedido(long idPedido){
+        List<ProductoPedido> productos = buscarPorIdPedido(idPedido);
+        return productos.stream().map(ItemPedidoDto::new).collect(Collectors.toList());
     }
 
 }

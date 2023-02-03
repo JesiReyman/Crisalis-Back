@@ -50,14 +50,14 @@ public class ItemPedidoService {
         return iItemPedidoRepository.findByTipo(tipo);
     }
 
-    public List<ItemPedido> setearItemPedido(List<ItemPedidoDto> listaItemsPedidos, Pedido pedido){
+    public List<ItemPedido> setearItemPedido(List<ItemPedidoDto> listaItemsPedidos, Pedido pedido, long dniOCuitCliente){
         ItemPedido itemPedido;
         List<ItemPedido> listaItems = new ArrayList<ItemPedido>();
 
         for(ItemPedidoDto item : listaItemsPedidos){
             String nombreProductoBase = item.getNombre();
             ProductoBase productoBase = productoBaseService.encontrarProductoBase(nombreProductoBase);
-            item = calcularItem(item);
+            item = calcularItem(item, dniOCuitCliente);
 
             String tipo = productoBase.getTipo();
 
@@ -74,7 +74,7 @@ public class ItemPedidoService {
         return listaItems;
     }
 
-    public ItemPedidoDto calcularItem(ItemPedidoDto itemPedidoDto){
+    public ItemPedidoDto calcularItem(ItemPedidoDto itemPedidoDto, long dniOCuitCLiente){
         //primero busco el producto base que agregué
         ProductoBase productoBase = productoBaseService.encontrarProductoBase(itemPedidoDto.getNombre());
         BigDecimal precioBase = productoBase.getPrecioBase();
@@ -86,19 +86,28 @@ public class ItemPedidoService {
 
         BigDecimal adicionalTotal = BigDecimal.ZERO;
         if (aniosGarantia != 0){
+            System.out.println(precioBase);
              adicionalTotal = adicionalService.aplicarAdicionales(precioBase, tipo, aniosGarantia);
+            System.out.println(adicionalTotal);
         } else {
             if(tipo.equals("servicio")){
                 adicionalTotal = servicioPedidoService.setAdicionalPrecioSoporte(productoBase.getNombre());
             }
         }
 
+        Cliente cliente = clienteService.encontrarCliente(dniOCuitCLiente);
+        ServicioPedido servicioActivo = buscarServicioActivo(cliente.getId());
+        BigDecimal descuentoItem = BigDecimal.ZERO;
+        if (servicioActivo != null) {
+             descuentoItem = adicionalService.calcularDescuento(precioBase); //.multiply(new BigDecimal(itemPedidoDto.getCantidad()) );
 
+        }
 
         //agrego los campos que me faltan al DTO
         itemPedidoDto.setPrecioBase(precioBase);
         itemPedidoDto.setTotalImpuestos(impuestoTotal);
         itemPedidoDto.setTotalAdicionales(adicionalTotal);
+        itemPedidoDto.setDescuento(descuentoItem);
 
         BigDecimal precioFinal = BigDecimal.ZERO;
         //si es un producto, tengo que calcular el precio por los años de garantia y sumarlos
@@ -116,10 +125,20 @@ public class ItemPedidoService {
 
 
     public List<ItemPedidoDto> obtenerItemsDePedido(long idPedido){
-        return iItemPedidoRepository.findByPedidoId(idPedido)
-                .stream()
-                .map(ItemPedidoDto::new)
-                .collect(Collectors.toList());
+        List<ProductoPedido> listaProductoPedido = productoPedidoService.buscarPorIdPedido(idPedido);
+        List<ServicioPedido> listaServicioPedido = servicioPedidoService.buscarPorIdPedido(idPedido);
+        List<ItemPedidoDto> listaItems = new ArrayList<>() ;
+        for (ProductoPedido producto : listaProductoPedido
+             ) {
+            ItemPedidoDto itemDto = new ItemPedidoDto(producto);
+            listaItems.add(itemDto);
+        }
+        for (ServicioPedido servicio : listaServicioPedido
+             ) {
+            ItemPedidoDto itemDto = new ItemPedidoDto(servicio);
+            listaItems.add(itemDto);
+        }
+        return listaItems;
 
     }
 
@@ -127,27 +146,11 @@ public class ItemPedidoService {
         return iItemPedidoRepository.findByPedidoIdAndTipo(idPedido, "producto");
     }
 
+
     public void reponerProductos(long idPedido){
         List<ItemPedido> listaProductos = obtenerProductosDePedido(idPedido);
         productoPedidoService.restaurarStock(listaProductos);
     }
-
-    public List<ItemPedido> obtenerServiciosDePedido(long idPedido){
-        return iItemPedidoRepository.findByPedidoIdAndTipo(idPedido, "servicio");
-    }
-
-    /*public ServicioPedido obtenerServicioActivo(long idPedido){
-        List<ItemPedido> servicios = obtenerServiciosDePedido(idPedido);
-        ServicioPedido servicioActivo = null;
-        for (ItemPedido item : servicios
-             ) {
-            ServicioPedido servicioPedido = servicioPedidoService.buscarPorId(item.getId());
-            if(servicioPedido.isActivo()){
-                servicioActivo = servicioPedido;
-            }
-        }
-        return servicioActivo;
-    }*/
 
     public ServicioPedido buscarServicioActivo(long idCliente){
         ItemPedido itemActivo = iItemPedidoRepository.BUSCAR_SERVICIO_ACTIVO(idCliente).orElse(null);
@@ -166,7 +169,7 @@ public class ItemPedidoService {
         BigDecimal descuentoCalculado = BigDecimal.ZERO;
         for (ItemPedido producto : listaProductos
              ) {
-             descuentoCalculado = descuentoCalculado.add(adicionalService.calcularDescuento(producto.getPrecioBase())) ;
+             descuentoCalculado = descuentoCalculado.add(adicionalService.calcularDescuento(producto.getPrecioBase()).multiply(new BigDecimal(producto.getCantidad()))) ;
 
         }
         BigDecimal descuentoTotal = BigDecimal.ZERO;
