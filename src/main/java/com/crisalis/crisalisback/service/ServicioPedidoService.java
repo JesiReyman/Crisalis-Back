@@ -3,6 +3,7 @@ package com.crisalis.crisalisback.service;
 import javax.transaction.Transactional;
 
 import com.crisalis.crisalisback.dto.ItemPedidoDto;
+import com.crisalis.crisalisback.model.ProductoPedido;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import com.crisalis.crisalisback.repository.IServicioPedido;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -66,6 +68,11 @@ public class ServicioPedidoService {
 
     public List<ServicioPedido> buscarPorIdPedido(long idPedido){
         return iServicioPedido.findByPedidoId(idPedido);
+    }
+
+    public List<ItemPedidoDto> serviciosDePedido(long idPedido){
+        List<ServicioPedido> servicios = buscarPorIdPedido(idPedido);
+        return servicios.stream().map(ItemPedidoDto::new).collect(Collectors.toList());
     }
 
     

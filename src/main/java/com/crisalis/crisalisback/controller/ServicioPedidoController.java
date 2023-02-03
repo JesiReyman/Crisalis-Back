@@ -1,5 +1,6 @@
 package com.crisalis.crisalisback.controller;
 
+import com.crisalis.crisalisback.dto.ItemPedidoDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,8 +34,8 @@ public class ServicioPedidoController {
     }
 
     @GetMapping("{idPedido}/lista")
-    public ResponseEntity<List<ServicioPedido>> servicioPedidosPorIdPedido(@PathVariable("idPedido") long idPedido){
-        List<ServicioPedido> lista = servicioPedidoService.buscarPorIdPedido(idPedido);
+    public ResponseEntity<List<ItemPedidoDto>> servicioPedidosPorIdPedido(@PathVariable("idPedido") long idPedido){
+        List<ItemPedidoDto> lista = servicioPedidoService.serviciosDePedido(idPedido);
         return new ResponseEntity<>(lista, HttpStatus.OK);
     }
 }
