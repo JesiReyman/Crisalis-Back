@@ -126,12 +126,17 @@ public class AdicionalService {
 
     }
 
-    public BigDecimal calcularDescuento(BigDecimal precioBase){
+    public BigDecimal calcularDescuento(BigDecimal precioBase, String tipo){
         List<AdicionalDTO> descuentos = obtenerListaDescuentos();
         BigDecimal descCalcPorItem = BigDecimal.ZERO;
         for (AdicionalDTO descuento : descuentos
              ) {
-            descCalcPorItem = descCalcPorItem.add(calculoImpuestoOAdicional(precioBase, descuento.getPorcentaje()));
+            System.out.println(tipo);
+            System.out.println(descuento.getAplica().toString());
+            if(descuento.getAplica().toString().equals(tipo.toUpperCase())){
+                descCalcPorItem = descCalcPorItem.add(calculoImpuestoOAdicional(precioBase, descuento.getPorcentaje()));
+            }
+
         }
                  ;
         return descCalcPorItem;

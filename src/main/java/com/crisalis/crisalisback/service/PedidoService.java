@@ -89,6 +89,8 @@ public class PedidoService {
                 descuentoGenerado = descuentoGenerado.add(descuento.getDescuentoGenerado());
             }
 
+            total = total.subtract(descuentoGenerado);
+
             PedidoDTO pedidoDTO = new PedidoDTO(pedido, dniOCuit, precioBase, totalImpuestos, totalAdicionales, total, descuentoGenerado);
             listaPedidosDTO.add(pedidoDTO);
         }
@@ -122,6 +124,7 @@ public class PedidoService {
     public Pedido editarPedido(long idPedido, List<ItemPedidoDto> listaItems){
         Pedido pedido = encontrarPedido(idPedido);
         Cliente cliente = pedido.getCliente();
+        itemPedidoService.reponerProductos(idPedido);
         pedido.getListaDeItems().clear();
         List<ItemPedido> itemsPedidos = itemPedidoService.setearItemPedido(listaItems, pedido, cliente.getDniOCuit());
         pedido.getListaDeItems().addAll(itemsPedidos);
