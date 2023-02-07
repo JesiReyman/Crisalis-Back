@@ -13,10 +13,9 @@ import com.crisalis.crisalisback.enums.EstadoDePedido;
 import com.crisalis.crisalisback.model.*;
 import com.crisalis.crisalisback.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.jdbc.config.SortedResourcesFactoryBean;
+import org.springframework.data.domain.*;
+import org.springframework.data.querydsl.QPageRequest;
 import org.springframework.stereotype.Service;
-import static org.apache.commons.lang3.compare.ComparableUtils.is;
 
 
 @Service
@@ -65,13 +64,16 @@ public class PedidoService {
     }
 
 
-    public List<PedidoDTO> listarPedidos(){
-        List<Pedido> listaPedidos = iPedido.findAll(Sort.by(Sort.Direction.DESC, "fechaCreacion"));
+    public Page<PedidoDTO> listarPedidos(Pageable pageable){
+        //Pageable pageable = PageRequest.of(0, 3, Sort.by("fechaCreacion").descending());
+        Page<Pedido> listaPedidos = iPedido.findAll(pageable);
+        int pedidosTotales = (int) listaPedidos.getTotalElements();
         List<PedidoDTO> listaPedidosDTO = new ArrayList<>();
+
         for (Pedido pedido : listaPedidos
         ) {
-            long dniOCuit = pedido.getCliente().getDniOCuit();
-            List<ItemPedido> listaItems = pedido.getListaDeItems();
+
+            /*List<ItemPedido> listaItems = pedido.getListaDeItems();
             BigDecimal precioBase = BigDecimal.ZERO;
             BigDecimal totalImpuestos = BigDecimal.ZERO;
             BigDecimal totalAdicionales = BigDecimal.ZERO;
@@ -91,14 +93,76 @@ public class PedidoService {
 
             total = total.subtract(descuentoGenerado);
 
-            PedidoDTO pedidoDTO = new PedidoDTO(pedido, dniOCuit, precioBase, totalImpuestos, totalAdicionales, total, descuentoGenerado);
+            PedidoDTO pedidoDTO = new PedidoDTO(pedido, precioBase, totalImpuestos, totalAdicionales, total, descuentoGenerado);*/
+            PedidoDTO pedidoDTO = armarPedidoDTO(pedido);
             listaPedidosDTO.add(pedidoDTO);
         }
-        return listaPedidosDTO;
+        Page paginaPedidosDTO = new PageImpl(listaPedidosDTO, pageable, pedidosTotales);
+        return paginaPedidosDTO;
     }
 
-    public List<Pedido> listarPedidosPorClienteFechaDesc(Long idPersona) {
-        return iPedido.findByClienteIdOrderByFechaCreacionDesc(idPersona);
+    public Page<Pedido> listarPedidosPorClienteFechaDesc(Long idPersona, Pageable pageable) {
+
+        return iPedido.findByClienteDniOCuitOrderByFechaCreacionDesc(idPersona, pageable);
+    }
+
+    public Page<PedidoDTO> pedidosDeCliente(long dniOCuit, Pageable pageable){
+        Page<Pedido> listaPedidos = listarPedidosPorClienteFechaDesc(dniOCuit, pageable);
+        int pedidosTotales = (int) listaPedidos.getTotalElements();
+        List<PedidoDTO> listaPedidosDTO = new ArrayList<>();
+        for (Pedido pedido : listaPedidos
+        ) {
+
+            /*List<ItemPedido> listaItems = pedido.getListaDeItems();
+            BigDecimal precioBase = BigDecimal.ZERO;
+            BigDecimal totalImpuestos = BigDecimal.ZERO;
+            BigDecimal totalAdicionales = BigDecimal.ZERO;
+            BigDecimal total = BigDecimal.ZERO;
+            for (ItemPedido item : listaItems
+            ) {
+                precioBase = precioBase.add(item.getPrecioBase()).multiply(new BigDecimal(item.getCantidad()) );
+                totalImpuestos = totalImpuestos.add(item.getTotalImpuestos()).multiply(new BigDecimal(item.getCantidad()));
+                totalAdicionales = totalAdicionales.add(item.getTotalAdicionales()).multiply(new BigDecimal(item.getCantidad()));
+                total = total.add(item.getPrecioFinalUnitario()).multiply(new BigDecimal(item.getCantidad()));
+            }
+            Descuento descuento = descuentoService.buscarDescuento(pedido.getId());
+            BigDecimal descuentoGenerado = BigDecimal.ZERO;
+            if(descuento != null){
+                descuentoGenerado = descuentoGenerado.add(descuento.getDescuentoGenerado());
+            }
+
+            total = total.subtract(descuentoGenerado);*/
+
+            /*PedidoDTO pedidoDTO = new PedidoDTO(pedido, precioBase, totalImpuestos, totalAdicionales, total, descuentoGenerado);*/
+            PedidoDTO pedidoDTO = armarPedidoDTO(pedido);
+            listaPedidosDTO.add(pedidoDTO);
+        }
+        Page paginaPedidosDTO = new PageImpl(listaPedidosDTO, pageable, pedidosTotales);
+        return paginaPedidosDTO;
+    }
+
+    public PedidoDTO armarPedidoDTO(Pedido pedido){
+        List<ItemPedido> listaItems = pedido.getListaDeItems();
+        BigDecimal precioBase = BigDecimal.ZERO;
+        BigDecimal totalImpuestos = BigDecimal.ZERO;
+        BigDecimal totalAdicionales = BigDecimal.ZERO;
+        BigDecimal total = BigDecimal.ZERO;
+        for (ItemPedido item : listaItems
+        ) {
+            precioBase = precioBase.add(item.getPrecioBase()).multiply(new BigDecimal(item.getCantidad()) );
+            totalImpuestos = totalImpuestos.add(item.getTotalImpuestos()).multiply(new BigDecimal(item.getCantidad()));
+            totalAdicionales = totalAdicionales.add(item.getTotalAdicionales()).multiply(new BigDecimal(item.getCantidad()));
+            total = total.add(item.getPrecioFinalUnitario()).multiply(new BigDecimal(item.getCantidad()));
+        }
+        Descuento descuento = descuentoService.buscarDescuento(pedido.getId());
+        BigDecimal descuentoGenerado = BigDecimal.ZERO;
+        if(descuento != null){
+            descuentoGenerado = descuentoGenerado.add(descuento.getDescuentoGenerado());
+        }
+
+        total = total.subtract(descuentoGenerado);
+
+        return new PedidoDTO(pedido, precioBase, totalImpuestos, totalAdicionales, total, descuentoGenerado);
     }
 
     public void eliminarPedido(Long idPedido){

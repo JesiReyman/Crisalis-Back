@@ -56,29 +56,33 @@ public class AuthController {
     public ResponseEntity<?> nuevo(@Valid @RequestBody NuevoUsuario nuevoUsuario,
                 BindingResult bindingResult
             ){
+
         if (bindingResult.hasErrors())
             return new ResponseEntity<Mensaje>(new Mensaje("Campos mal puestos o email inválido"), HttpStatus.BAD_REQUEST);
-        
-        if (usuarioLoginService.existByNombreUsuario(nuevoUsuario.getNombreUsuario()))
-            return new ResponseEntity<Mensaje>(new Mensaje("Ese nombre de usuario ya existe"), HttpStatus.BAD_REQUEST);
-        
-        if (usuarioLoginService.existByEmail(nuevoUsuario.getEmail()))
-            return new ResponseEntity<Mensaje>(new Mensaje("Ese email ya está registrado"), HttpStatus.BAD_REQUEST);
-        
-        UsuarioLogin usuario = new UsuarioLogin(nuevoUsuario.getNombre(), nuevoUsuario.getApellido(),
-                nuevoUsuario.getNombreUsuario(), 
-                nuevoUsuario.getEmail(),
-                passwordEncoder.encode(nuevoUsuario.getPassword()));
-        
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rolService.getByRolNombre(RolNombre.ROLE_ADMIN).get());
-        
+        /*if(usuarioLoginService.checkUsuarioLogin(nuevoUsuario)){
+            if (usuarioLoginService.existByNombreUsuario(nuevoUsuario.getNombreUsuario()))
+                return new ResponseEntity<Mensaje>(new Mensaje("Ese nombre de usuario ya existe"), HttpStatus.BAD_REQUEST);
+
+            if (usuarioLoginService.existByEmail(nuevoUsuario.getEmail()))
+                return new ResponseEntity<Mensaje>(new Mensaje("Ese email ya está registrado"), HttpStatus.BAD_REQUEST);
+
+            UsuarioLogin usuario = new UsuarioLogin(nuevoUsuario.getNombre(), nuevoUsuario.getApellido(),
+                    nuevoUsuario.getNombreUsuario(),
+                    nuevoUsuario.getEmail(),
+                    passwordEncoder.encode(nuevoUsuario.getPassword()));
+
+            Set<Rol> roles = new HashSet<>();
+            roles.add(rolService.getByRolNombre(RolNombre.ROLE_ADMIN).get());*/
+
         /*if(nuevoUsuario.getRoles().contains("admin"))
             roles.add(rolService.getByRolNombre(RolNombre.ROLE_ADMIN).get());*/
-        usuario.setRoles(roles);
-        usuarioLoginService.save(usuario);
-        
-        return new ResponseEntity<Mensaje>(new Mensaje("Usuario guardado"), HttpStatus.CREATED);
+           /* usuario.setRoles(roles);
+            usuarioLoginService.save(usuario);
+        }
+
+
+        return new ResponseEntity<Mensaje>(new Mensaje("Usuario guardado"), HttpStatus.CREATED);*/
+       return usuarioLoginService.nuevoUsuario(nuevoUsuario);
     }
     
     @PostMapping("/login")

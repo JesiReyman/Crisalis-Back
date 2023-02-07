@@ -26,12 +26,6 @@ public class PersonaClienteController {
         return new ResponseEntity<>(nuevoCliente, HttpStatus.OK);
     }
 
-    /*@GetMapping("{idCliente}")
-    public ResponseEntity<Cliente> traerCliente(@PathVariable("idCliente") Long idCliente){
-        Cliente cliente = clienteService.traerCliente(idCliente);
-        return new ResponseEntity<>(cliente, HttpStatus.OK);
-    }*/
-
     @GetMapping("{dniCliente}")
     public ResponseEntity<PersonaClienteDTO> buscarClientePorDni(@PathVariable("dniCliente") Long dniCliente){
         PersonaClienteDTO cliente = personaClienteService.buscarClientePorDni(dniCliente);

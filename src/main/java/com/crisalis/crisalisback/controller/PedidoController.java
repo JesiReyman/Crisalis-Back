@@ -5,6 +5,11 @@ import java.util.List;
 import com.crisalis.crisalisback.dto.EstadoDTO;
 import com.crisalis.crisalisback.dto.ItemPedidoDto;
 import com.crisalis.crisalisback.dto.PedidoDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +30,9 @@ public class PedidoController {
     }
 
     @GetMapping("lista")
-    public ResponseEntity<List<PedidoDTO>> listarPedidos(){
-        List<PedidoDTO> listaPedidos = pedidoService.listarPedidos();
+    public ResponseEntity<Page<PedidoDTO>> listarPedidos(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size ){
+        Pageable pageable = PageRequest.of(page, size, Sort.by("fechaCreacion").descending());
+        Page<PedidoDTO> listaPedidos = pedidoService.listarPedidos(pageable);
         return new ResponseEntity<>(listaPedidos, HttpStatus.OK);
     }
 
@@ -37,8 +43,11 @@ public class PedidoController {
     }
 
     @GetMapping("/{idPersona}/lista")
-    public ResponseEntity<List<Pedido>> listarPedidosDePersona(@PathVariable("idPersona") Long idPersona) {
-        List<Pedido> listaPedido = pedidoService.listarPedidosPorClienteFechaDesc(idPersona);
+    public ResponseEntity<Page<PedidoDTO>> listarPedidosDePersona(@PathVariable("idPersona") Long idPersona,
+                                                                  @RequestParam(defaultValue = "0") int page,
+                                                                  @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<PedidoDTO> listaPedido = pedidoService.pedidosDeCliente(idPersona, pageable);
         return new ResponseEntity<>(listaPedido, HttpStatus.OK);
     }
 

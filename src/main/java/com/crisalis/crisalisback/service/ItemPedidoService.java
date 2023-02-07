@@ -86,9 +86,9 @@ public class ItemPedidoService {
 
         BigDecimal adicionalTotal = BigDecimal.ZERO;
         if (aniosGarantia != 0){
-            System.out.println(precioBase);
+
              adicionalTotal = adicionalService.aplicarAdicionales(precioBase, tipo, aniosGarantia);
-            System.out.println(adicionalTotal);
+
         } else {
             if(tipo.equals("servicio")){
                 adicionalTotal = servicioPedidoService.setAdicionalPrecioSoporte(productoBase.getNombre());

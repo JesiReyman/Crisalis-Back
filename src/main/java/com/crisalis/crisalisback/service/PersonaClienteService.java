@@ -73,7 +73,16 @@ public class PersonaClienteService {
     }
 
     public void eliminarCliente(long dniCLiente){
+        PersonaCliente persona = buscarPorDNI(dniCLiente);
+        checkSiTieneEmpresa(persona);
         iPersonaClienteRepository.deleteByDniOCuit(dniCLiente);
+    }
+    public void checkSiTieneEmpresa(PersonaCliente persona){
+        EmpresaCliente empresa = persona.getEmpresa();
+        System.out.println(empresa);
+        if(empresa != null){
+            empresa.setPersonaCliente(null);
+        }
     }
 
     public void asociarAEmpresa(long cuitEmpresa, long dniPersona){

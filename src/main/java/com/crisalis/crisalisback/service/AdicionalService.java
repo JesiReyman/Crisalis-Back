@@ -115,8 +115,7 @@ public class AdicionalService {
             } else{
                 System.out.println("no aplica");
             }
-            System.out.println("el valor calculado es");
-            System.out.println(valorCalculado);
+
         }
         return valorCalculado;
     }
@@ -131,8 +130,7 @@ public class AdicionalService {
         BigDecimal descCalcPorItem = BigDecimal.ZERO;
         for (AdicionalDTO descuento : descuentos
              ) {
-            System.out.println(tipo);
-            System.out.println(descuento.getAplica().toString());
+
             if(descuento.getAplica().toString().equals(tipo.toUpperCase())){
                 descCalcPorItem = descCalcPorItem.add(calculoImpuestoOAdicional(precioBase, descuento.getPorcentaje()));
             }
