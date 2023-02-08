@@ -21,11 +21,13 @@ public class ServicioPedidoController {
         this.servicioPedidoService = servicioPedidoService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/borrar/{idServicioPedido}")
     public void borrarServicioPedido(@PathVariable("idServicioPedido") Long idServicioPedido){
         servicioPedidoService.borrarServicioPedido(idServicioPedido);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("cambiarEstado/{nombreServicio}/{idPedido}")
     public ResponseEntity<ServicioPedido>  cambiarEstadoServicio(@PathVariable("nombreServicio") String nombreServicio,
                                                 @PathVariable("idPedido") Long idPedido, @RequestBody boolean activo){
@@ -33,6 +35,7 @@ public class ServicioPedidoController {
         return new ResponseEntity<>(servicioPedido, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("{idPedido}/lista")
     public ResponseEntity<List<ItemPedidoDto>> servicioPedidosPorIdPedido(@PathVariable("idPedido") long idPedido){
         List<ItemPedidoDto> lista = servicioPedidoService.serviciosDePedido(idPedido);

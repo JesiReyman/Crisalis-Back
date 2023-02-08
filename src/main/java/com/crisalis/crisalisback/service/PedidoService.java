@@ -190,8 +190,14 @@ public class PedidoService {
         Cliente cliente = pedido.getCliente();
         itemPedidoService.reponerProductos(idPedido);
         pedido.getListaDeItems().clear();
+
+        Descuento descuento = pedido.getDescuento();
         List<ItemPedido> itemsPedidos = itemPedidoService.setearItemPedido(listaItems, pedido, cliente.getDniOCuit());
         pedido.getListaDeItems().addAll(itemsPedidos);
+        if(descuento != null){
+            BigDecimal descuentoGenerado = itemPedidoService.calculoDescuentoTotal(itemsPedidos);
+            descuento.setDescuentoGenerado(descuentoGenerado);
+        }
         return pedido;
     }
 

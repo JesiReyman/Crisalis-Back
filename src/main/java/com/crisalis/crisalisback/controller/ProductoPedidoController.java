@@ -6,6 +6,7 @@ import com.crisalis.crisalisback.model.ProductoPedido;
 import com.crisalis.crisalisback.service.ProductoPedidoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,6 +28,7 @@ public class ProductoPedidoController {
         return new ResponseEntity<>(nuevoProductoPedido, HttpStatus.OK);
     }*/
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("borrar/{idProductoPedido}")
     public void eliminarProductoPedido(@PathVariable("idProductoPedido") Long idProductoPedido){
         productoPedidoService.borrarProductoPedido(idProductoPedido);
@@ -37,6 +39,7 @@ public class ProductoPedidoController {
         return productoPedidoService.calculoDescuento(idCliente, idProducto);
     }*/
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("{idPedido}/lista")
     public ResponseEntity<List<ItemPedidoDto>> productosPedidosPorPedido(@PathVariable("idPedido") long idPedido){
         List<ItemPedidoDto> lista = productoPedidoService.productosDePedido(idPedido);

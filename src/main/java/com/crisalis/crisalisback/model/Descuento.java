@@ -9,14 +9,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.*;
 
 import java.math.BigDecimal;
 
-@Data
 @AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
 @Entity
 public class Descuento {
@@ -25,6 +25,7 @@ public class Descuento {
 
     private BigDecimal descuentoGenerado;
 
+    @JsonBackReference
     @OneToOne
     @MapsId
     @JoinColumn(name = "pedido")

@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.crisalis.crisalisback.model.Pedido;
@@ -29,6 +30,7 @@ public class PedidoController {
         this.pedidoService = pedidoService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("lista")
     public ResponseEntity<Page<PedidoDTO>> listarPedidos(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size ){
         Pageable pageable = PageRequest.of(page, size, Sort.by("fechaCreacion").descending());
@@ -36,12 +38,14 @@ public class PedidoController {
         return new ResponseEntity<>(listaPedidos, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/{dniOCuitCliente}/nuevo")
     public ResponseEntity<Pedido> crearPedido(@PathVariable("dniOCuitCliente") long dniOCuitCliente, @Valid @RequestBody List<ItemPedidoDto> listaItems){
         Pedido nuevoPedido = pedidoService.crearPedido(dniOCuitCliente, listaItems);
         return new ResponseEntity<>(nuevoPedido, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{idPersona}/lista")
     public ResponseEntity<Page<PedidoDTO>> listarPedidosDePersona(@PathVariable("idPersona") Long idPersona,
                                                                   @RequestParam(defaultValue = "0") int page,
@@ -51,22 +55,26 @@ public class PedidoController {
         return new ResponseEntity<>(listaPedido, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{idPedido}")
     public ResponseEntity<Pedido> detallePedido(@PathVariable("idPedido") Long idPedido){
         Pedido pedido = pedidoService.encontrarPedido(idPedido);
         return new ResponseEntity<>(pedido, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("borrar/{idPedido}")
     public void eliminarPedido(@PathVariable("idPedido") Long idPedido){
         pedidoService.eliminarPedido(idPedido);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("{idPedido}/cambiarEstado")
     public void cambiarEstado(@PathVariable("idPedido") Long idPedido, @RequestBody EstadoDTO estadoDTO){
         pedidoService.cambiarEstado(idPedido, estadoDTO);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("editar/{idPedido}")
     public ResponseEntity<Pedido> editarPedido(@PathVariable("idPedido") Long idPedido, @RequestBody List<ItemPedidoDto> listaItems){
         Pedido pedido = pedidoService.editarPedido(idPedido, listaItems);

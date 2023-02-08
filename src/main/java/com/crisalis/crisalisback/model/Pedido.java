@@ -13,13 +13,12 @@ import com.crisalis.crisalisback.enums.EstadoDePedido;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 
-@Data
+@AllArgsConstructor
+@Getter @Setter
 @NoArgsConstructor
 @Entity
 public class Pedido {

@@ -27,41 +27,48 @@ public class EmpresaClienteController {
         return new ResponseEntity<>(nuevaEmpresaCliente, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("{cuitEmpresa}")
     public ResponseEntity<EmpresaClienteDTO> traerEmpresaCliente(@PathVariable("cuitEmpresa") Long cuitEmpresa){
         EmpresaClienteDTO empresa = empresaClienteService.traerEmpresaCliente(cuitEmpresa);
         return new ResponseEntity<>(empresa, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("lista")
     public ResponseEntity<List<EmpresaClienteDTO>> listaEmpresas(){
         List<EmpresaClienteDTO> listaEmpresas = empresaClienteService.listaEmpresas();
         return new ResponseEntity<>(listaEmpresas, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("{cuitEmpresa}/personaAsociada")
     public ResponseEntity<PersonaClienteDTO> getPersonaAsociada(@PathVariable("cuitEmpresa") Long cuitEmpresa){
         PersonaClienteDTO personaClienteDTO = empresaClienteService.mostrarPersonaAsociada(cuitEmpresa);
         return new ResponseEntity<>(personaClienteDTO, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("{idEmpresa}/asociar/{idCliente}")
     public ResponseEntity<EmpresaCliente> editarClienteAsociado(@PathVariable("idEmpresa") Long idEmpresa, @PathVariable("idCliente") Long idCliente){
         EmpresaCliente empresa = empresaClienteService.editarClienteAsociado(idEmpresa, idCliente);
         return new ResponseEntity<>(empresa, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("editar/{cuitEmpresa}")
     public ResponseEntity<EmpresaClienteDTO> editarEmpresa(@PathVariable("cuitEmpresa") Long cuitEmpresa, @RequestBody EmpresaClienteDTO empresa){
         EmpresaClienteDTO empresaEditada = empresaClienteService.editarEmpresa(cuitEmpresa, empresa);
         return new ResponseEntity<>(empresaEditada, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("eliminar/{cuitEmpresa}")
     public void eliminarEmpresaCliente(@PathVariable("cuitEmpresa") Long cuitEmpresa){
         empresaClienteService.eliminarEmpresa(cuitEmpresa);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("{cuitEmpresa}/asociar")
     public ResponseEntity<EmpresaCliente> asociarNuevaPersona(@PathVariable("cuitEmpresa") long cuitEmpresa, @RequestBody PersonaClienteDTO persona){
         EmpresaCliente empresa = empresaClienteService.setPersonaAEmpresa(cuitEmpresa, persona);
