@@ -7,13 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
+
 
 @Data
 @AllArgsConstructor
@@ -30,23 +26,25 @@ public class PedidoDTO {
     private BigDecimal totalAdicionales;
     private BigDecimal total;
     private BigDecimal descuento;
+    private String tipoCliente;
 
     public PedidoDTO(Pedido pedido,
-                     long dniOCuitCliente,
                      BigDecimal precioBase,
                      BigDecimal totalImpuestos,
                      BigDecimal totalAdicionales,
                      BigDecimal total,
-                     BigDecimal descuento) {
+                     BigDecimal descuento
+                     ) {
         this.id = pedido.getId();
         this.fechaCreacion = pedido.getFechaCreacion();
         this.estado = pedido.getEstado();
-        this.dniOCuitCliente = dniOCuitCliente;
+        this.dniOCuitCliente = pedido.getCliente().getDniOCuit();
         this.precioBase = precioBase;
         this.totalImpuestos = totalImpuestos;
         this.totalAdicionales = totalAdicionales;
         this.total = total;
         this.descuento = descuento;
+        this.tipoCliente = pedido.getCliente().getTipo();
     }
 
     public static Pedido dtoAPedido(PedidoDTO pedidoDTO){

@@ -25,4 +25,8 @@ public class DescuentoService {
     public Descuento buscarDescuento(long idPedido){
         return iDescuento.findByPedidoId(idPedido).orElse(null);
     }
+
+    public void eliminarDescuento(Descuento descuento){
+         iDescuento.delete(descuento);
+    }
 }

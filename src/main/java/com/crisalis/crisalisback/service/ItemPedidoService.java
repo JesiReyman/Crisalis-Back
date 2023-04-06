@@ -86,9 +86,9 @@ public class ItemPedidoService {
 
         BigDecimal adicionalTotal = BigDecimal.ZERO;
         if (aniosGarantia != 0){
-            System.out.println(precioBase);
+
              adicionalTotal = adicionalService.aplicarAdicionales(precioBase, tipo, aniosGarantia);
-            System.out.println(adicionalTotal);
+
         } else {
             if(tipo.equals("servicio")){
                 adicionalTotal = servicioPedidoService.setAdicionalPrecioSoporte(productoBase.getNombre());
@@ -99,7 +99,7 @@ public class ItemPedidoService {
         ServicioPedido servicioActivo = buscarServicioActivo(cliente.getId());
         BigDecimal descuentoItem = BigDecimal.ZERO;
         if (servicioActivo != null) {
-             descuentoItem = adicionalService.calcularDescuento(precioBase); //.multiply(new BigDecimal(itemPedidoDto.getCantidad()) );
+             descuentoItem = adicionalService.calcularDescuento(precioBase, tipo); //.multiply(new BigDecimal(itemPedidoDto.getCantidad()) );
 
         }
 
@@ -163,13 +163,15 @@ public class ItemPedidoService {
     }
 
     public BigDecimal calculoDescuentoTotal(List<ItemPedido> listaItems) {
-        List<ItemPedido> listaProductos = listaItems.stream()
+        /*List<ItemPedido> listaProductos = listaItems.stream()
                 .filter(item -> item.getTipo().equals("producto"))
-                .toList();
+                .toList();*/
         BigDecimal descuentoCalculado = BigDecimal.ZERO;
-        for (ItemPedido producto : listaProductos
+        for (ItemPedido itemPedido : listaItems
              ) {
-             descuentoCalculado = descuentoCalculado.add(adicionalService.calcularDescuento(producto.getPrecioBase()).multiply(new BigDecimal(producto.getCantidad()))) ;
+             descuentoCalculado = descuentoCalculado
+                                    .add(adicionalService.calcularDescuento(itemPedido.getPrecioBase(), itemPedido.getTipo())
+                                            .multiply(new BigDecimal(itemPedido.getCantidad()))) ;
 
         }
         BigDecimal descuentoTotal = BigDecimal.ZERO;

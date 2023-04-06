@@ -27,6 +27,7 @@ public class ProductoController {
         return new ResponseEntity<>(nuevoProducto, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/lista")
     public ResponseEntity<List<ProductoDTO>> listarProductos() {
         List<ProductoDTO> listaDeProductos = productoService.listarProductos();
@@ -39,6 +40,7 @@ public class ProductoController {
         return new ResponseEntity<>(producto, HttpStatus.OK);
     }*/
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("traer/{nombreProducto}")
     public ResponseEntity<ProductoDTO> traerProductoPorNombre(@PathVariable("nombreProducto") String nombreProducto){
         ProductoDTO producto = productoService.traerProductoDTOByNombre(nombreProducto);

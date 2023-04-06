@@ -18,7 +18,7 @@ public class PersonaCliente extends Cliente{
     private String apellido;
 
     @JsonManagedReference
-    @OneToOne(mappedBy="personaCliente", cascade = {CascadeType.ALL}, orphanRemoval = true)
+    @OneToOne(mappedBy="personaCliente", cascade = CascadeType.MERGE)
     private EmpresaCliente empresa;
 
 
